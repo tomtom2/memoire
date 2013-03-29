@@ -1,0 +1,85 @@
+\documentclass[a4paper]{report}
+
+\usepackage[utf8]{inputenc}
+\usepackage[francais]{babel}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{placeins}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{textcomp}
+
+%----- Package français
+\usepackage[utf8]{inputenc} %reconnaissance des accents
+\usepackage[francais]{babel} %document en français
+\usepackage[T1]{fontenc} %codage des fonts TeX ?
+
+
+
+%----- math
+\usepackage{amsmath}
+\usepackage{dsfont}
+\usepackage{calrsfs}
+
+%----- images
+\usepackage{graphicx}
+
+\title{VC theory}
+%\author{Thomas BRIEN}
+%\date{28 janvier 2013}
+
+\begin{document}
+%\maketitle
+\tableofcontents
+
+\renewcommand{\thesection}{\arabic{section}}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemme}
+
+\renewcommand{\thetheorem}{\empty{}}
+\renewcommand{\thelemma}{\empty{}} 
+
+\newenvironment{proof}[1][Proof]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}]}{\end{trivlist}}
+\newenvironment{definition}[1][Definition]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}]}{\end{trivlist}}
+\newenvironment{example}[1][Example]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}]}{\end{trivlist}}
+\newenvironment{remark}[1][Rq:]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}]}{\end{trivlist}}
+\newenvironment{rappel}[1][rappel:]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}]}{\end{trivlist}}
+
+
+\chapter*{Introduction}
+\addcontentsline{toc}{chapter}{Introduction}
+
+
+
+
+\chapter*{Plate-forme cible}
+\addcontentsline{toc}{chapter}{Plate-forme cible}
+
+
+
+
+\chapter*{État de l'art}
+\addcontentsline{toc}{chapter}{État de l'art}
+
+\section*{Les tests unitaires avec JUnit}
+\addcontentsline{toc}{section}{Les tests unitaires avec JUnit}
+\section*{Les tests par contrat}
+\addcontentsline{toc}{section}{Les tests par contrat}
+\section*{Les tests par mutation}
+\addcontentsline{toc}{section}{Les tests par mutation}
+
+
+
+
+\chapter*{Idées et mise en œuvre}
+\addcontentsline{toc}{chapter}{Idées et mise en œuvre}
+
+\end{document}

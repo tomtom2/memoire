@@ -4,3 +4,13 @@
 *.jar
 *.war
 *.ear
+
+# tex files #
+*.pdf
+*.aux
+*.log
+*.toc
+*.gz
+
+workspace/private/*
+workspace/.metadata/*
