@@ -1,59 +1,53 @@
 package source;
 
-import java.net.URL;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import japa.parser.JavaParser;
+import japa.parser.ast.CompilationUnit;
+import japa.parser.ast.body.MethodDeclaration;
+import japa.parser.ast.visitor.VoidVisitorAdapter;
 
+import java.io.FileInputStream;
 
 public class Main {
 
 	/**
 	 * @param args
 	 */
-	public static void main(String[] args) {
-		Grapher g = new Grapher(Solver.class, 1);
-		// g.printResume();
-		System.out.println(Solver.class.getPackage().getName());
-		System.out.println(Solver.class.getProtectionDomain());
+	public static void main(String[] args) throws Exception {
+		String url = "/home/thomas/master/memoire/workspace/ObjectGrapher/";
+		// creates an input stream for the file to be parsed
+		FileInputStream in = new FileInputStream(url + "src/source/Solver.java");
 
-		URL url = Solver.class.getResource("Solver.class");
-		System.out.println(url);
-		// try {
-		// FileReader fr = new FileReader(new File("src/source/Solver.java"));
-		// String str = "";
-		// int buf;
-		// while((buf = fr.read())!=-1){
-		// str += buf;
-		// }
-		// System.out.println(str);
-		// } catch (FileNotFoundException e) {
-		// // TODO Auto-generated catch block
-		// e.printStackTrace();
-		// } catch (IOException e) {
-		// // TODO Auto-generated catch block
-		// e.printStackTrace();
-		// }
-
-		String myJson = "{ \"id\" : \"38476563\" }";
-		//JSONObject obj=new JSONObject();
-
-		System.out.println(myJson.substring(myJson.indexOf(":")+1,myJson.lastIndexOf("\"")));
-		
-		String jsonString = "{ \"id\" : \"00001937473\"";
-
-		String strPattern = "{ \"id\" : \"(\\d*)\"}";
-		Pattern pattern = Pattern.compile(strPattern);
-		Matcher matcher = pattern.matcher(jsonString);
-		if (matcher.find()) {
-			String friendIdString = matcher.group(1);
-			System.out.println("regex selection : " + jsonString + " --> "
-					+ friendIdString);
-
-		} else {
-			System.out.println("no regex selection for " + jsonString);
-
+		CompilationUnit cu;
+		try {
+			// parse the file
+			cu = JavaParser.parse(in);
+		} finally {
+			in.close();
 		}
 
+		// prints the resulting compilation unit to default system output
+		System.out.println(cu.getTypes());
+		System.out.println("\n\n\n\n\n\n\n");
+		// visit and print the methods names
+		new MethodVisitor().visit(cu, null);
+
 	}
+	
+	/**
+     * Simple visitor implementation for visiting MethodDeclaration nodes. 
+     */
+    private static class MethodVisitor extends VoidVisitorAdapter {
+
+        @Override
+        public void visit(MethodDeclaration n, Object arg) {
+            // here you can access the attributes of the method.
+            // this method will be called for all methods in this 
+            // CompilationUnit, including inner class methods
+            System.out.println(n.getName());
+            System.out.println(n.getBody());
+            System.out.println("\n");
+        }
+    }
+
 
 }

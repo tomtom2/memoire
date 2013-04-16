@@ -1,4 +1,5 @@
-package source;
+package com.github.tbrien.gentest.model;
+
 public class Solver {
 
 	private int a;
@@ -38,7 +39,7 @@ public class Solver {
 		return (-b + Math.sqrt(delta))/(2*a);
 	}
 	
-	public void printEquationType(boolean b){
+	public void printEquationType(){
 		if(delta==0){
 			System.out.println("Solution unique");
 		}
