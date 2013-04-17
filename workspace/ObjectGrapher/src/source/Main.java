@@ -52,8 +52,15 @@ public class Main {
             for (BodyDeclaration member : members) {
             	System.out.println("member : "+member);
                 if (member instanceof MethodDeclaration) {
+                	System.out.println(">>> methode");
                     MethodDeclaration method = (MethodDeclaration) member;
                     //changeMethod(method);
+                }
+                else if(member instanceof japa.parser.ast.body.ConstructorDeclaration){
+                	System.out.println(">>> constructor");
+                }
+                else if(member instanceof japa.parser.ast.body.FieldDeclaration){
+                	System.out.println(">>> field");
                 }
             }
         }
