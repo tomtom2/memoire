@@ -87,10 +87,10 @@ public class Graph {
 		int count3 = 0;
 		for(String meth : this.methodsMap.keySet()){
 			count1++;
-			dot.addRelation("0", ""+count1, meth);
+			dot.addRelation("0", "1."+count1, meth);
 			for(String meth2 : this.methodsMap.keySet()){
 				count2++;
-				dot.addRelation(""+count1, ""+count2, meth2);
+				dot.addRelation("1."+count1, "2."+count2, meth2);
 //				for(String meth3 : this.methodsMap.keySet()){
 //					count3++;
 //					dot.addRelation(""+init+2, "3."+count3, meth3);

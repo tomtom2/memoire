@@ -47,6 +47,20 @@ public class Solver {
 		}
 		else{
 			System.out.println("Solutions imaginaires");
-		}
+		}		
 	}
+	
+	
+	public int exemple(int arg1, int arg2){
+		int val = 0;
+		if(this.a<arg1){
+			val = arg1;
+		}
+		if(val<arg2){
+			val += arg2;
+		}
+		return val;
+	}
+	
+	
 }

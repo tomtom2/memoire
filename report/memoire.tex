@@ -1,3 +1,5 @@
+%& -shell-escape
+
 \documentclass[a4paper]{report}
 
 \usepackage[utf8]{inputenc}
@@ -26,7 +28,15 @@
 %----- images
 \usepackage{graphicx}
 
-\title{VC theory}
+%----- dot graphs
+\usepackage{pgf}
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows}
+\usepackage[debug]{dot2texi}
+
+
+
+\title{Automatic test case generation for java}
 %\author{Thomas BRIEN}
 %\date{28 janvier 2013}
 
@@ -86,7 +96,8 @@
 \addcontentsline{toc}{section}{Les méthodes de test automatique}
 - IOCO théorie\\
 - ioLTS\\
-- FSM\\
+- FSM/EFSM (Extended Finit State Machin)\\
+- MBT (Model-Based Testing)
 
 
 
@@ -96,6 +107,65 @@
 - random testing\\
 - dynamic path construction leaded by coverage (récursive)\\
 - logic modelisation (FOL) and SMT solver\\
+
+On raisonne sur le code source, et plus particulièrement sur des blocs de code. A partir de ce point, nous appellerons fonction élémentaire une partie de code dont la séquence d'exécution ne dépend d'aucune variable. Plus précisément, dans notre cas, un code java qui ne contient pas d'accolades.\\
+\newline
+Par exemple, le code java suivant contient deux actions elementaires: val=arg1 et val+=arg2\\
+
+\begin{lstlisting}
+public int exemple(int arg1, int arg2){
+		int val = 0;
+		if(this.a<arg1){
+			val = arg1;
+		}
+		if(val<arg2){
+			val += arg2;
+		}
+		return val;
+	}
+\end{lstlisting}
+A cette fonction, on associera le graph suivant:\\
+
+
+\begin{dot2tex}[dot, tikz,options=-tmath --autosize]
+digraph G {
+
+rankdir=LR;
+
+node [shape="none"]; start;
+
+node [shape="circle",color="black"]; a_0 a_1 a_2 a_3;
+node [shape="diamond", color="black"]; d_0 d_1 d_2;
+node [shape="circle",peripheries=2, style="filled", color="black"]; o_0 o_1 o_2 o_3;
+
+start -> a_0;
+a_0 -> d_0;
+d_0 -> a_1;
+d_0 -> d_1;
+a_1 -> d_2;
+d_1 -> a_2;
+d_1 -> o_0;
+a_2 -> o_1;
+d_2 -> o_2;
+d_2 -> a_3;
+a_3 -> o_3;
+}
+\end{dot2tex}
+
+\begin{figure}[position]
+   \caption{\label{étiquette} titre}
+   \includegraphics[scale=0.4]{../graphviz/doubleStackGraph.png}
+\end{figure}
+%\newline
+
+
+
+En suivant notre modélisation, on obtient deux actions élémentaires:
+
+
+\chapter*{Réalisations}
+\addcontentsline{toc}{chapter}{Réalisations}
+
 
 \chapter*{Bibliographie}
 \addcontentsline{toc}{chapter}{Bibliographie}
