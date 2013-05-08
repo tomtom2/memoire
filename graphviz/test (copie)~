@@ -1,0 +1,4 @@
+digraph graphname {
+     b -> b [label="getConnection()"];
+     a -> b [label="getConnection()"];
+ }
