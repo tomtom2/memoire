@@ -59,6 +59,12 @@ public class Solver {
 		if(val<arg2){
 			val += arg2;
 		}
+		else if(val==arg1){
+			System.out.println("LOL");
+		}
+		else{
+			val += 1;
+		}
 		return val;
 	}
 	

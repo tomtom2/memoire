@@ -13,8 +13,16 @@ import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.SimpleName;
 import org.eclipse.jdt.core.dom.StructuralPropertyDescriptor;
+import org.eclipse.jdt.core.dom.ConditionalExpression;
+import org.eclipse.jdt.core.dom.Block;
+import org.eclipse.jdt.core.dom.FieldAccess;
+import org.eclipse.jdt.core.dom.IfStatement;
+import org.eclipse.jdt.core.dom.WhileStatement;
+
 import org.eclipse.jdt.core.dom.VariableDeclaration;
 import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
+import org.eclipse.jdt.core.dom.VariableDeclarationExpression;
+import org.eclipse.jdt.core.dom.VariableDeclarationStatement;
 
 
 public class Main {
@@ -48,41 +56,58 @@ public class Main {
 		//parser.setSource("public class A { int i = 9;  \n int j; \n ArrayList<Integer> al = new ArrayList<Integer>();j=1000; if(j>i){al.add(j);}}".toCharArray());
 		//parser.setSource("/*abc*/".toCharArray());
 		parser.setKind(ASTParser.K_COMPILATION_UNIT);
-		IProgressMonitor monitor;
 		//ASTNode node = parser.createAST(null);
  
  
 		final CompilationUnit cu = (CompilationUnit) parser.createAST(null);
- 
-		cu.accept(new ASTVisitor() {
+        cu.accept(new Visitor());
+		/*cu.accept(new ASTVisitor() {
  
 			Set names = new HashSet();
  
 			public boolean visit(VariableDeclarationFragment node) {
-				SimpleName name = node.getName();
-				this.names.add(name.getIdentifier());
-				System.out.println("Declaration of '"+name+"' at line"+cu.getLineNumber(name.getStartPosition()));
+				System.out.println("Declaration of '"+node+"' at line"+cu.getLineNumber(node.getStartPosition()));
 				return false; // do not continue to avoid usage info
 			}
  
 			public boolean visit(MethodDeclaration node) {
 				System.out.println("MethodDeclaration '"+ node.getName() + "' at line " +	cu.getLineNumber(node.getStartPosition()));
+				Object act = null;
+				node.accept(new ASTVisitor() {
+					public boolean visit(VariableDeclarationFragment node) {
+						System.out.println("Sub Declaration of '"+node+"' at line"+cu.getLineNumber(node.getStartPosition()));
+						return false; // do not continue to avoid usage info
+					}
+					public boolean visit(VariableDeclaration node) {
+						System.out.println("Sub VariableDeclaration '"+node+"' at line"+cu.getLineNumber(node.getStartPosition()));
+						return false; // do not continue to avoid usage info
+					}
+				});
 				System.out.println(node.parameters());
 				
 				return true;
 			}
-			
-			public boolean visit(org.eclipse.jdt.core.dom.ConditionalExpression node) {
-				System.out.println("Conditional Exp: '" + node + "' at line " +	cu.getLineNumber(node.getStartPosition()));
-				return true;
-			}
 //			
-//			public boolean visit(org.eclipse.jdt.core.dom.Block node) {
-//				System.out.println("Block: '" + node + "' of type " +	node.getNodeType());
+//			public boolean visit(org.eclipse.jdt.core.dom.ConditionalExpression node) {
+//				System.out.println("Conditional Exp: '" + node + "' at line " +	cu.getLineNumber(node.getStartPosition()));
 //				return true;
 //			}
+			
+			public boolean visit(VariableDeclaration node) {
+				System.out.println("VariableDeclaration: '" + node + "' of type " +	node.getNodeType());
+				return true;
+			}
+			public boolean visit(VariableDeclarationExpression node) {
+				System.out.println("VariableDeclarationExpression: '" + node + "' of type " +	node.getNodeType());
+				return true;
+			}
+			public boolean visit(VariableDeclarationStatement node) {
+				System.out.println("VariableDeclaration: '" + node + "' of type " +	node.getNodeType());
+				return true;
+			}
 
 			
 		});
+		*/
 	}
 }
