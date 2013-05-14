@@ -65,17 +65,16 @@ public class Main {
 		final CompilationUnit cu = (CompilationUnit) parser.createAST(null);
 		Visitor viz = new Visitor(cu);
         cu.accept(viz);
-        System.out.println("\nPile:");
-        for(Node node : viz.getStatementsList().toNodeArray()){
-        	System.out.println(node.getBody()+" : "+node.getStart()+" --> "+node.getEnd());
-        	System.out.println("\t-----\t");
-        }
         
-//		String methodBody = "public class A {int val = 0; if(this.a<arg1){ val = arg1; } if(val<arg2){ val += arg2; } else if(val==arg1){ System.out.println(\"LOL\"); } else{val += 1; } return val;}";
-//		ASTParser parserM = ASTParser.newParser(AST.JLS4);
-//		parserM.setSource(methodBody.toCharArray());
-//		parserM.setKind(ASTParser.K_COMPILATION_UNIT);
-//		final CompilationUnit cuM = (CompilationUnit) parserM.createAST(null);
-//        cuM.accept(new Visitor());
+        System.out.println("\nWork on method body:");
+		String methodBody = "public class A {int val = 0; if(this.a<arg1){ val = arg1; } if(val<arg2){ val += arg2; } else if(val==arg1){ System.out.println(\"LOL\"); } else{val += 1; } return val;}";
+		ASTParser parserM = ASTParser.newParser(AST.JLS4);
+		parserM.setSource(source.toCharArray());
+		parserM.setKind(ASTParser.K_COMPILATION_UNIT);
+		final CompilationUnit cuM = (CompilationUnit) parserM.createAST(null);
+        cuM.accept(new Visitor(cuM));
+        
+        System.out.println("\n\nStored nodes:\n");
+        viz.getStore().printLinks();
 	}
 }

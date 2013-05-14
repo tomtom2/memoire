@@ -12,7 +12,12 @@ public class Test {
 		
 		if(val<arg2){ val += arg2; }
 		else if(val==arg1){ System.out.println("LOL"); }
-		else{ val += 1; }
+		else{
+			val += 1;
+			if(val==3){
+				System.out.println("poil aux doigts!");
+			}
+		}
 		
 		val = Math.abs(val);
 		

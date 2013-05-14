@@ -4,9 +4,6 @@ import org.eclipse.jdt.core.dom.IfStatement;
 
 
 public class Node {
-
-	public static int END_OF_PIPE=1;
-	public static int START_OF_PIPE=2;
 	
 	protected int start;
 	protected int end;
@@ -14,24 +11,26 @@ public class Node {
 	
 	protected String type = "";
 	protected String body = "";
+	protected Node child;
+	protected Node parent;
+	
 	
 	public Node(ASTNode astNode){
 		start = astNode.getStartPosition();
 		length = astNode.getLength();
 		end = start + length;
-		if(astNode instanceof IfStatement){
-			findBody((IfStatement)astNode);
-		}
+		
+		child = null;
+		parent = null;
 	}
 	
 	public Node(){
 		start = 0;
 		length = 0;
 		end = 0;
-	}
-	
-	private void findBody(IfStatement node){
-		body = node.getExpression().toString();
+		
+		child = null;
+		parent = null;
 	}
 	
 	public String getBody(){
@@ -58,7 +57,45 @@ public class Node {
 		this.body = body;
 	}
 
-	
+	public Node getChild() {
+		return child;
+	}
+
+	public void setChild(Node child) {
+		this.child = child;
+	}
+
+	public boolean equals(Node node){
+		return this.start==node.start && this.end==node.end;
+	}
+
+	public Node getParent() {
+		return parent;
+	}
+
+	public void setParent(Node parent) {
+		this.parent = parent;
+	}
+
+	public boolean hasChild() {
+		return this.getChild()!=null;
+	}
+
+	public int getLength() {
+		return length;
+	}
+
+	public void setLength(int length) {
+		this.length = length;
+	}
+
+	public void setStart(int start) {
+		this.start = start;
+	}
+
+	public void setEnd(int end) {
+		this.end = end;
+	}
 	
 	
 }
