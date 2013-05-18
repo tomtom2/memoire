@@ -2,6 +2,7 @@ package main;
 import java.util.List;
 
 import model.NodeStore;
+import node.ActionNode;
 import node.ConditionalNode;
 
 import org.eclipse.jdt.core.dom.ASTNode;
@@ -29,6 +30,9 @@ public class InsideMethodVisitor extends ASTVisitor {
 	
 	public boolean visit(ExpressionStatement node) {
 		//System.out.println("ExpressionStatement Exp: " + node.getExpression());
+		ActionNode actionNode = new ActionNode(node);
+		System.out.println("adding action : ["+actionNode.getStart()+":"+actionNode.getEnd()+"]");
+		store.addNode(actionNode);
 		return true;
 	}
 //	public boolean visit(ASTNode node) {
@@ -40,34 +44,23 @@ public class InsideMethodVisitor extends ASTVisitor {
 //		System.out.println("IfStatement: " + node.toString().substring(0, Math.min(15, node.toString().length())));
 //		System.out.println("["+node.getStartPosition()+", "+(node.getStartPosition()+node.getLength())+"]");
 //		System.out.println("create instance of ConditionalNode");
+		System.out.println("Vivitor exp. : "+node.getExpression());
 		ConditionalNode condNode = new ConditionalNode(node);
-		condNode.setType(node.getExpression().toString());
-		System.out.println("type : "+condNode.getType());
-		//System.out.println("store node");
+		condNode.setType("IF");
+		condNode.setBody(node.getExpression().toString());
 		store.addNode(condNode);
-		//System.out.println("create if child");
-		//Node tmp_IF = new Node(node.getThenStatement());
-		//condNode.setChild(tmp_IF);
-		//System.out.println("add if child");
-		//store.addNode(tmp_IF);
 		if(node.getElseStatement()==null){
 			return true;
 		}
-		//System.out.println("create else child");
-		//Node tmp_ELSE = new Node(node.getElseStatement());
-		//condNode.setElseChild(tmp_ELSE);
-		//System.out.println("add else child");
-		//store.addNode(tmp_ELSE);
 		String elseStrart = node.getElseStatement().toString().substring(0, Math.min(7, node.getElseStatement().toString().length()));
 		if(elseStrart.startsWith("{")){
 			ConditionalNode tmp = new ConditionalNode();
-			//tmp.setType("else");
 			tmp.setStart(node.getElseStatement().getStartPosition());
 			tmp.setEnd(node.getElseStatement().getStartPosition()+node.getElseStatement().getLength());
+			tmp.setBody("else:"+node.getExpression());
 			store.addNode(tmp);
 		}
-//		System.out.println("IfStatement (else): " + node.getElseStatement().toString().substring(0, Math.min(15, node.getElseStatement().toString().length())));
-//		System.out.println("["+node.getElseStatement().getStartPosition()+", "+(node.getElseStatement().getStartPosition()+node.getElseStatement().getLength())+"]");
+
 		return true;
 	}
 //	

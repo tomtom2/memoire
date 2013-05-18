@@ -1,4 +1,6 @@
 package main;
+import node.ConditionalNode;
+
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.IfStatement;
 
@@ -31,6 +33,51 @@ public class Node {
 		
 		child = null;
 		parent = null;
+	}
+	
+	public boolean isBetterParentFor(Node parent, Node child){
+		if(parent==null){
+			return true;
+		}
+		int currentGap1 = child.start-this.start;
+		int oldGap = child.start-parent.start;
+		return currentGap1<=oldGap && currentGap1>0;
+	}
+	
+	public boolean isContainedBy(ConditionalNode parent){
+		return parent.start<start && parent.end>end;
+	}
+	
+	public Node isBetterContainedBy(Node bestContainer, Node oldNode){
+		int gap1Start = -1;
+		int gap1End = -1;
+		int gap2Start = -1;
+		int gap2End = -1;
+		if(bestContainer!=null){
+			gap1Start = start-bestContainer.getStart();
+			gap1End = bestContainer.getEnd()-end;
+		}
+		if(oldNode!=null){
+			gap2Start = start-oldNode.getStart();
+			gap2End = oldNode.getEnd()-end;
+		}
+		
+		Node selectedParent = null;
+		int fittingScore = -1;
+		if(gap1Start>=0 && gap1End>=0){
+			fittingScore = gap1Start + gap1End;
+			selectedParent = bestContainer;
+		}
+		if(gap2Start>=0 && gap2End>=0 && fittingScore>(gap2Start + gap2End)){
+			fittingScore = gap2Start + gap2End;
+			selectedParent = oldNode;
+		}
+		
+		if(fittingScore>0){
+			return selectedParent;
+		}
+		
+		return null;
 	}
 	
 	public String getBody(){
@@ -95,6 +142,13 @@ public class Node {
 
 	public void setEnd(int end) {
 		this.end = end;
+	}
+
+	public boolean isContainedBy(Node node) {
+		if(node == null){
+			return false;
+		}
+		return start>node.start && end<node.end;
 	}
 	
 	

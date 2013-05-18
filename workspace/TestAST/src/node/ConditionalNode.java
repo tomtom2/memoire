@@ -2,17 +2,25 @@ package node;
 
 import main.Node;
 
-import org.eclipse.jdt.core.dom.ASTNode;
+import org.eclipse.jdt.core.dom.IfStatement;
 
 public class ConditionalNode extends Node {
 	
-	private Node elseChild;
+	private Node elseChild = null;
 
-	public ConditionalNode(ASTNode node){
+	public ConditionalNode(IfStatement node){
 		super(node);
+		child = new Node(node.getThenStatement());
+		child.setBody("tmp_if:"+node.getExpression());
+		child.setType("tmp");
+		if(node.getElseStatement()!=null){
+			elseChild = new Node(node.getElseStatement());
+			elseChild.setBody("tmp_else:"+node.getExpression());
+			elseChild.setType("tmp");
+		}
 	}
 	public ConditionalNode(){
-		this.type = "else";
+		this.type = "ELSE";
 	}
 	
 	public Node getElseChild() {

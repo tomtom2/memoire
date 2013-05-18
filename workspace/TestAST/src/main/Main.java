@@ -74,7 +74,7 @@ public class Main {
 		final CompilationUnit cuM = (CompilationUnit) parserM.createAST(null);
         cuM.accept(new Visitor(cuM));
         
-        System.out.println("\n\nStored nodes:\n");
-        viz.getStore().printLinks();
+        viz.getStore().makeGraph("/home/thomas/my_graph.dot");
+        
 	}
 }
