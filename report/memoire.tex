@@ -1,11 +1,27 @@
 %& -shell-escape
 
+% Les packages utilise's ci-dessous le sont a` titre indicatif ;
+% vous pouvez les changer a` votre convenance.
+
+% Le type de document: article, rapport...
 \documentclass[a4paper]{report}
 
+% Mettre les diffe'rents packages et fonctions que l'on utilise
+%\usepackage[english]{babel}
+%\usepackage[french]{babel}
+%\usepackage{amsmath}
+%\usepackage{amssymb}
+%\usepackage{graphics,color}
+
+% Commenter l'une de ces deux lignes
+%\RequirePackage[applemac]{inputenc}
+%\RequirePackage[latin1]{inputenc}
+
 \usepackage[utf8]{inputenc}
-\usepackage[francais]{babel}
+\usepackage[english]{babel}
+%\usepackage[francais]{babel}
 \usepackage[T1]{fontenc}
-\usepackage{amsmath}
+%\usepackage{amsmath}
 \usepackage{amsfonts}
 \usepackage{amssymb}
 \usepackage{placeins}
@@ -14,9 +30,9 @@
 \usepackage{textcomp}
 
 %----- Package français
-\usepackage[utf8]{inputenc} %reconnaissance des accents
-\usepackage[francais]{babel} %document en français
-\usepackage[T1]{fontenc} %codage des fonts TeX ?
+%\usepackage[utf8]{inputenc} %reconnaissance des accents
+%\usepackage[francais]{babel} %document en français
+%\usepackage[T1]{fontenc} %codage des fonts TeX ?
 
 
 
@@ -32,16 +48,83 @@
 \usepackage{pgf}
 \usepackage{tikz}
 \usetikzlibrary{shapes,arrows}
-\usepackage[debug]{dot2texi}
+%\usepackage[debug]{dot2texi}
 
 
 
 \title{Automatic test case generation for java}
-%\author{Thomas BRIEN}
-%\date{28 janvier 2013}
+\author{Thomas BRIEN}
+\date{27 Mai 2013}
 
 \begin{document}
 %\maketitle
+
+% Titre du rapport
+\def\TitreRapport{
+    Automatic test generation\\
+    for OO programs
+}
+
+% Pre'nom et nom dde l'auteur
+\def\NomsAuteurs{
+    Thomas BRIEN
+}
+
+% Date du rapport (dans la me^me langue que le titre)
+\def\DateRapport{
+    27 Mai 2013
+}
+
+% Nom des encadrants
+\def\Encadrants{
+    \textbf{Encadrant(s)} \\
+    Arnaud MAKALA
+}
+% Nom du laboratoire
+\def\Labo{
+    Sopra Banking Software - R\&D
+}
+
+
+
+% Re'sume' en franc,ais avec mots-cle's
+\def\ResumeFrancais{
+    R\'esum\'e en fran\c{c}ais obligatoire.
+    \\[2mm]
+    {\bf Mots-cl\'es : } mot-cl\'es  obligatoires.
+}
+
+\def\Resume{
+    Summary.
+    \\[2mm]
+    {\bf Key-words : } some key words...
+}
+
+
+\thispagestyle{empty}
+\begin{center}
+\baselineskip=1.3\normalbaselineskip
+{\bf\Large \TitreRapport}\\[8mm]
+{\bf\large \NomsAuteurs}\\[1mm]
+{\Labo}\\[4mm]
+\DateRapport\\[4mm]
+\Encadrants\\[10mm]
+
+\newpage
+{\bf R\'esum\'e}
+\end{center}
+
+
+\ResumeFrancais\\[4mm]
+\newline
+\begin{center}
+{\bf Summary}
+\end{center}
+\Resume\\[4mm]
+
+\newpage
+
+
 \tableofcontents
 
 \renewcommand{\thesection}{\arabic{section}}
@@ -70,39 +153,39 @@
 
 
 
-\chapter*{Plate-forme cible}
-\addcontentsline{toc}{chapter}{Plate-forme cible}
+%\chapter*{Plate-forme cible}
+%\addcontentsline{toc}{chapter}{Plate-forme cible}
 
 
 
 
-\chapter*{État de l'art}
-\addcontentsline{toc}{chapter}{État de l'art}
+\chapter*{State of the art}
+\addcontentsline{toc}{chapter}{State of the art}
 
 
-\section*{Les tests classiques, avec JUnit}
-\addcontentsline{toc}{section}{Les tests classiques, avec JUnit}
+\section*{Tests with JUnit}
+\addcontentsline{toc}{section}{Tests with JUnit}
 
-\subsection*{Tests unitaires}
-\addcontentsline{toc}{subsection}{Tests unitaires}
+\subsection*{Unit tests}
+\addcontentsline{toc}{subsection}{Unit tests}
 Les tests unitaires ont pour but de prouver la validité d'un objet. Par exemple, on souhaite parcourir la totalité du code en lançant le programme avec des valeurs clef choisies par le programmeur chargé des tests.
 
-\subsection*{Tests d'intégration}
-\addcontentsline{toc}{subsection}{Tests d'intégration}
+\subsection*{Integration tests}
+\addcontentsline{toc}{subsection}{Integration tests}
 Les tests d'intégration visent à valider la bonne interaction entre plusieurs composants du système.
 
-\subsection*{Tests système}
-\addcontentsline{toc}{subsection}{Tests système}
+\subsection*{System tests}
+\addcontentsline{toc}{subsection}{System tests}
 Comme on peut s'en douter, les tests système permettent de contrôler le système dans son ensemble.
 
-\section*{Les tests par contrat}
-\addcontentsline{toc}{section}{Les tests par contrat}
+\section*{Testing by contract}
+\addcontentsline{toc}{section}{Testing by contract}
 L'introduction de contrats dans le code permet de définir les conditions de début, de fin, et les constantes d'exécution.
-\section*{Les tests par mutation}
-\addcontentsline{toc}{section}{Les tests par mutation}
+\section*{Mutation testing}
+\addcontentsline{toc}{section}{Mutation testing}
 
-\section*{Les méthodes de test automatique}
-\addcontentsline{toc}{section}{Les méthodes de test automatique}
+\section*{Test automation}
+\addcontentsline{toc}{section}{Test automation}
 - IOCO théorie\\
 - ioLTS\\
 - FSM/EFSM (Extended Finit State Machin)\\
@@ -137,34 +220,9 @@ public int exemple(int arg1, int arg2){
 A cette fonction, on associera le graph suivant:\\
 
 
-\begin{dot2tex}[dot, tikz,options=-tmath --autosize]
-digraph G {
-
-rankdir=LR;
-
-node [shape="none"]; start;
-
-node [shape="circle",color="black"]; a_0 a_1 a_2 a_3;
-node [shape="diamond", color="black"]; d_0 d_1 d_2;
-node [shape="circle",peripheries=2, style="filled", color="black"]; o_0 o_1 o_2 o_3;
-
-start -> a_0;
-a_0 -> d_0;
-d_0 -> a_1;
-d_0 -> d_1;
-a_1 -> d_2;
-d_1 -> a_2;
-d_1 -> o_0;
-a_2 -> o_1;
-d_2 -> o_2;
-d_2 -> a_3;
-a_3 -> o_3;
-}
-\end{dot2tex}
-
-\begin{figure}[position]
+\begin{figure}[h!]
    \caption{\label{étiquette} titre}
-   \includegraphics[scale=0.4]{../graphviz/doubleStackGraph.png}
+   \includegraphics[scale=0.3]{../graphviz/doubleStackGraph.png}
 \end{figure}
 %\newline
 
@@ -177,20 +235,45 @@ En suivant notre modélisation, on obtient deux actions élémentaires:
 \addcontentsline{toc}{chapter}{Réalisations}
 
 
-\chapter*{Bibliographie}
-\addcontentsline{toc}{chapter}{Bibliographie}
+\chapter*{References}
+\addcontentsline{toc}{chapter}{References}
 \section*{BDD}
 \addcontentsline{toc}{section}{BDD}
+$[1.1]$Testing by Contract
+- Combining Unit Testing and Design by Contract
+Per Madsen (madsen@cs.auc.dk)
+Institute of Computer Science, Aalborg University
+Fredrik Bajers Vej 7, DK-9220 Aalborg, Denmark\\
+\newline
 
-\section*{Les tests par mutation}
-\addcontentsline{toc}{section}{Les tests par mutation}
+
+
+\section*{Mutation testing}
+\addcontentsline{toc}{section}{Mutation testing}
+$[2.1]$ Composants objets fiables :
+une approche pragmatique\\
+Daniel Deveaux* - Régis Fleurquin* - Patrice Frison*
+Jean-Marc Jézéquel** - Yves Le Traon**\\
+* Laboratoire VALORIA (Aglae)
+UBS - IUP de Tohannic - Rue Mainguy
+56000 VANNES\\
+** IRISA-CNRS (Pampa)
+Université Rennes 1 - Campus de Beaulieu
+35042 RENNES\\
+\newline
 
 \section*{Automatisation}
 \addcontentsline{toc}{section}{Automatisation}
 
 $[3.1]$ Bertrand Meyer, Ilinca Ciupa, Andreas Leitner and Lisa (Ling) Liu, \textit{Automatic Testing of Object-Oriented Software}, in SOFSEM 2007\\
+\newline
 $[3.2]$ Hans-Gerhard Gross and Arjan Seesing, 
-\textit{A Genetic Programming Approach to Automated Test Generation for Object Oriented Software}, Report TUD-SERG-2006-017
+\textit{A Genetic Programming Approach to Automated Test Generation for Object Oriented Software}, Report TUD-SERG-2006-017\\
+\newline
+$[3.3]$\textit{Higher-Order Test Generation} - 
+Patrice Godefroid - 
+Microsoft Research\\
+\newline
 
 
 \end{document}

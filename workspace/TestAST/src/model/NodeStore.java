@@ -4,16 +4,21 @@ import java.util.ArrayList;
 
 import com.github.tomtom2.objectgrapher.util.Dot;
 
-import main.Node;
 import node.ActionNode;
 import node.ConditionalNode;
+import node.Node;
 
 public class NodeStore {
 
 	private ArrayList<Node> nodes = new ArrayList<Node>();
 
 	public NodeStore() {
-
+		Node start = new Node();
+		start.setBody("start");
+		start.setType("start");
+		start.setStart(0);
+		start.setEnd(0);
+		nodes.add(start);
 	}
 
 	public void addNode(Node node) {
@@ -29,8 +34,6 @@ public class NodeStore {
 	}
 
 	public void addNode(ConditionalNode node) {
-		System.out.println("adding cond. : [" + node.getBody() + "] "
-				+ node.getStart() + ":" + node.getEnd());
 		if (contains(node)) {
 			return;
 		}
@@ -69,6 +72,7 @@ public class NodeStore {
 	private void makeParentLink(ConditionalNode node) {
 		Node parentContainer = findBestParentContainer(node);
 		if (parentContainer == null) {
+			makeDirectLink(node);
 			return;
 		}
 		if (!parentContainer.hasChild()) {
@@ -92,8 +96,16 @@ public class NodeStore {
 			if (containedParent != null) {
 				containedParent.setChild(node);
 				node.setParent(containedParent);
+				System.out.println("create cond. link : ["
+						+ containedParent.getBody() + "] --> [" + node.getBody()
+						+ "]");
 			}
 		}
+	}
+
+	private void makeDirectLink(ConditionalNode node) {
+		// TODO Auto-generated method stub
+		
 	}
 
 	private void makeParentLink(ActionNode node) {
@@ -154,7 +166,7 @@ public class NodeStore {
 			} else {
 				if (bestContainer != null) {
 					System.out
-							.println("best container for [" + node.getStart()
+							.println("best container for "+node.getBody()+"[" + node.getStart()
 									+ ":" + node.getEnd() + "] between ["
 									+ bestContainer.getStart() + ":"
 									+ bestContainer.getEnd() + "] and ["
@@ -162,7 +174,7 @@ public class NodeStore {
 									+ oldNode.getEnd() + "]");
 				}
 				bestContainer = node
-						.isBetterContainedBy(bestContainer, oldNode);
+						.isBetterContainedBy(oldNode, bestContainer);
 				// System.out.println("--> ["+bestContainer.getStart()+":"+bestContainer.getEnd()+"]\n");
 			}
 		}
@@ -244,6 +256,9 @@ public class NodeStore {
 	}
 
 	public boolean contains(Node node) {
+		if(node.getType().equals("") || node.getBody().equals("")){
+			return true;
+		}
 		for (Node containedNode : nodes) {
 			if (containedNode.equals(node)) {
 				return true;
@@ -260,6 +275,13 @@ public class NodeStore {
 				String to = "\""+node.getChild().getBody().replace("\"", "'")+"\"";
 				dot.addRelation(from, to, "");
 			}
+			if(node instanceof ConditionalNode){
+				if(((ConditionalNode)node).getElseChild()!=null){
+					String from = "\""+node.getBody().replace("\"", "'")+"\"";
+					String to = "\""+((ConditionalNode) node).getElseChild().getBody().replace("\"", "'")+"\"";
+					dot.addRelation(from, to, "");
+				}
+			}
 		}
 		dot.makeGraph(path);
 	}
@@ -272,24 +294,12 @@ public class NodeStore {
 			} else {
 				System.out.println("link : [" + node.getBody() + "]");
 			}
-			// if(node instanceof ConditionalNode){
-			// if(node.hasChild()){
-			// System.out.println("IFlink : ["+node.getBody()+"] --> ["+node.getChild().getBody()+"]");
-			// }
-			// if(((ConditionalNode)node).getElseChild()!=null){
-			// System.out.println("ELSElink : ["+node.getBody()+"] --> ["+((ConditionalNode)
-			// node).getElseChild().getBody()+"]");
-			// }
-			// }
-			// else if(node.hasChild()){
-			// System.out.println("link : ["+node.getBody()+"] --> ["+node.getChild().getBody()+"]");
-			// }
-			// if(!node.hasChild() && !hasParent(node)){
-			// System.out.println("isolated node : ["+node.getBody()+"]");
-			// }
-			// if(node.hasChild()){
-			// System.out.println("node.getChild() -> "+node.getChild().getBody());
-			// }
 		}
 	}
+
+	public ArrayList<Node> getNodes() {
+		return nodes;
+	}
+	
+	
 }

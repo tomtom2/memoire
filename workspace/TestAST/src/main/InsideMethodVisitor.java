@@ -52,13 +52,26 @@ public class InsideMethodVisitor extends ASTVisitor {
 		if(node.getElseStatement()==null){
 			return true;
 		}
-		String elseStrart = node.getElseStatement().toString().substring(0, Math.min(7, node.getElseStatement().toString().length()));
+		String elseStrart = node.getElseStatement().toString().substring(0, Math.min(15, node.getElseStatement().toString().length()));
 		if(elseStrart.startsWith("{")){
 			ConditionalNode tmp = new ConditionalNode();
 			tmp.setStart(node.getElseStatement().getStartPosition());
 			tmp.setEnd(node.getElseStatement().getStartPosition()+node.getElseStatement().getLength());
 			tmp.setBody("else:"+node.getExpression());
 			store.addNode(tmp);
+		}
+		if(elseStrart.startsWith("if")){
+			System.out.println("\n\nSTART OF CONDITIONAL STATEMENT:");
+			System.out.println(elseStrart);
+			if(node.getElseStatement() instanceof IfStatement){
+				System.out.println("ELSE contains another IfStateent!");
+				System.out.println(((IfStatement) node.getElseStatement()).getExpression());
+				ConditionalNode tmp = new ConditionalNode((IfStatement) node.getElseStatement());
+				tmp.setBody("else_if:"+((IfStatement) node.getElseStatement()).getExpression());
+				//condNode.setElseChild(tmp);
+				store.addNode(tmp);
+				//condNode.getElseChild().setChild(tmp);
+			}			
 		}
 
 		return true;

@@ -2,7 +2,6 @@ package node;
 
 import org.eclipse.jdt.core.dom.ExpressionStatement;
 
-import main.Node;
 
 public class ActionNode extends Node {
 

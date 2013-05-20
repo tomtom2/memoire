@@ -1,6 +1,5 @@
 package node;
 
-import main.Node;
 
 import org.eclipse.jdt.core.dom.IfStatement;
 

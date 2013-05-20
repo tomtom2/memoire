@@ -16,8 +16,9 @@ public class Test {
 			if (val * val < arg1) {
 				System.out.println("val est plus petit que 1...");
 			}
-		} 
+		}
 	    else if (val == arg1) {
+	    	arg1 = (arg1+arg2)/2;
 			System.out.println("LOL");
 		} else {
 			val += 1;

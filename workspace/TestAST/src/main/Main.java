@@ -76,5 +76,7 @@ public class Main {
         
         viz.getStore().makeGraph("/home/thomas/my_graph.dot");
         
+        System.out.println("\n\nSUMMARY:");
+        viz.getStore().printLinks();
 	}
 }
