@@ -71,14 +71,23 @@ public class NodeStore {
 
 	private void makeParentLink(ConditionalNode node) {
 		Node parentContainer = findBestParentContainer(node);
+		Node parent = this.findParent(node);
+		
 		if (parentContainer == null) {
-			makeDirectLink(node);
+			return;
+		}
+		if(!parentContainer.equals(parent) && parent != null){
+			parent.setChild(node);
+			node.setParent(parent);
+			System.out.println("create cond. link (alternative) : ["
+					+ parentContainer.getBody() + "] --> [" + node.getBody()
+					+ "]");
 			return;
 		}
 		if (!parentContainer.hasChild()) {
 			parentContainer.setChild(node);
 			node.setParent(parentContainer);
-			System.out.println("create cond. link : ["
+			System.out.println("create cond. link (first child) : ["
 					+ parentContainer.getBody() + "] --> [" + node.getBody()
 					+ "]");
 		} else {
@@ -101,11 +110,6 @@ public class NodeStore {
 						+ "]");
 			}
 		}
-	}
-
-	private void makeDirectLink(ConditionalNode node) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	private void makeParentLink(ActionNode node) {
@@ -158,7 +162,7 @@ public class NodeStore {
 
 	private Node findBestParentContainer(Node node) {
 		Node bestContainer = null;
-		System.out.println("node = " + node.getBody() + " [" + node.getStart()
+		System.out.println("looking for bestParentContainer node = " + node.getBody() + " [" + node.getStart()
 				+ ":" + node.getEnd() + "]");
 		for (Node oldNode : nodes) {
 			if (bestContainer == null && node.isContainedBy(oldNode)) {
@@ -174,8 +178,8 @@ public class NodeStore {
 									+ oldNode.getEnd() + "]");
 				}
 				bestContainer = node
-						.isBetterContainedBy(oldNode, bestContainer);
-				// System.out.println("--> ["+bestContainer.getStart()+":"+bestContainer.getEnd()+"]\n");
+						.isBetterContainedBy(bestContainer, oldNode);
+				//System.out.println("--> ["+bestContainer.getStart()+":"+bestContainer.getEnd()+"]\n");
 			}
 		}
 		if (bestContainer != null) {
@@ -201,55 +205,48 @@ public class NodeStore {
 	private Node findParent(ConditionalNode node) {
 		System.out.println("looking for parent...");
 		Node parent = null;
-		for (Node oldNode : nodes) {
-			if (node.getStart() > oldNode.getStart()
-					&& node.getEnd() <= oldNode.getEnd()) {
-				parent = oldNode;
-				break;
+		parent = findBestParentContainer(node);
+		
+		if(parent == null){
+			for (Node oldNode : nodes) {
+				if(oldNode.isBetterParentFor(parent, node)){
+					parent = oldNode;
+				}
 			}
+			return parent;
 		}
-		if (parent == null) {
-			System.out.println("no parent");
-			return null;
-		}
-		System.out.println("entering while loop...");
-		Node lastParentTrial = new Node();
-		while (!parent.equals(lastParentTrial) && parent.hasChild()) {
-			lastParentTrial = parent;
-			if (node.getStart() > parent.getChild().getStart()
-					&& node.getEnd() <= parent.getChild().getEnd()) {
-				parent = parent.getChild();
-			} else if (parent instanceof ConditionalNode) {
-				// -TODO
-				if (((ConditionalNode) parent).getElseChild() != null) {
-					if (node.getStart() > ((ConditionalNode) parent)
-							.getElseChild().getStart()
-							&& node.getEnd() <= ((ConditionalNode) parent)
-									.getElseChild().getEnd()) {
-						parent = ((ConditionalNode) parent).getElseChild();
+		else{
+			Node lastParentTrial = new Node();
+			while (!parent.equals(lastParentTrial) && parent.hasChild()) {
+				lastParentTrial = parent;
+				if (node.getStart() >= parent.getChild().getStart()
+						&& node.getEnd() <= parent.getChild().getEnd()) {
+					parent = parent.getChild();
+				} else if (parent instanceof ConditionalNode) {
+					// -TODO
+					if (((ConditionalNode) parent).getElseChild() != null) {
+						if (node.getStart() >= ((ConditionalNode) parent)
+								.getElseChild().getStart()
+								&& node.getEnd() <= ((ConditionalNode) parent)
+										.getElseChild().getEnd()) {
+							parent = ((ConditionalNode) parent).getElseChild();
+						}
 					}
 				}
-			} else if (parent instanceof ActionNode && parent.hasChild()) {
-				// -TODO
-				if (((ConditionalNode) parent).getElseChild() != null) {
-					if (node.getStart() > ((ConditionalNode) parent)
-							.getElseChild().getStart()
-							&& node.getEnd() <= ((ConditionalNode) parent)
-									.getElseChild().getEnd()) {
-						parent = ((ConditionalNode) parent).getElseChild();
+				else if (parent instanceof ActionNode && parent.hasChild()) {
+					// -TODO
+					if (((ConditionalNode) parent).getElseChild() != null) {
+						if (node.getStart() > ((ConditionalNode) parent)
+								.getElseChild().getStart()
+								&& node.getEnd() <= ((ConditionalNode) parent)
+										.getElseChild().getEnd()) {
+							parent = ((ConditionalNode) parent).getElseChild();
+						}
 					}
 				}
-			} else if (parent instanceof ConditionalNode) {
-				if (((ConditionalNode) parent).getElseChild() != null) {
-					if (node.getStart() > ((ConditionalNode) parent)
-							.getElseChild().getStart()
-							&& node.getEnd() <= ((ConditionalNode) parent)
-									.getElseChild().getEnd()) {
-						parent = ((ConditionalNode) parent).getElseChild();
-					}
+				else {
+					break;
 				}
-			} else {
-				break;
 			}
 		}
 		return parent;
@@ -271,14 +268,14 @@ public class NodeStore {
 		Dot dot = new Dot("my_graph", 0);
 		for (Node node : nodes) {
 			if(node.hasChild()){
-				String from = "\""+node.getBody().replace("\"", "'")+"\"";
-				String to = "\""+node.getChild().getBody().replace("\"", "'")+"\"";
+				String from = "\""+node.getBody().replace("\"", "'")+" ["+node.getStart()+":"+node.getEnd()+"]\"";
+				String to = "\""+node.getChild().getBody().replace("\"", "'")+" ["+node.getChild().getStart()+":"+node.getChild().getEnd()+"]\"";
 				dot.addRelation(from, to, "");
 			}
 			if(node instanceof ConditionalNode){
 				if(((ConditionalNode)node).getElseChild()!=null){
-					String from = "\""+node.getBody().replace("\"", "'")+"\"";
-					String to = "\""+((ConditionalNode) node).getElseChild().getBody().replace("\"", "'")+"\"";
+					String from = "\""+node.getBody().replace("\"", "'")+" ["+node.getStart()+":"+node.getEnd()+"]\"";
+					String to = "\""+((ConditionalNode) node).getElseChild().getBody().replace("\"", "'")+" ["+((ConditionalNode) node).getElseChild().getStart()+":"+((ConditionalNode) node).getElseChild().getEnd()+"]\"";
 					dot.addRelation(from, to, "");
 				}
 			}

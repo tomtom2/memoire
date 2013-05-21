@@ -40,14 +40,17 @@ public class Node {
 		}
 		int currentGap1 = child.start-this.start;
 		int oldGap = child.start-parent.start;
-		return currentGap1<=oldGap && currentGap1>0;
+		return currentGap1<=oldGap && currentGap1>=0;
 	}
 	
-	public boolean isContainedBy(ConditionalNode parent){
-		return parent.start<=start && parent.end>=end;
-	}
+//	public boolean isContainedBy(ConditionalNode parent){
+//		return parent.start<=start && parent.end>=end;
+//	}
 	
-	public Node isBetterContainedBy(Node bestContainer, Node oldNode){
+	public Node isBetterContainedBy(Node bestContainer, Node newNode){
+		if(!this.isContainedBy(newNode)){
+			return bestContainer;
+		}
 		int gap1Start = -1;
 		int gap1End = -1;
 		int gap2Start = -1;
@@ -56,9 +59,9 @@ public class Node {
 			gap1Start = start-bestContainer.getStart();
 			gap1End = bestContainer.getEnd()-end;
 		}
-		if(oldNode!=null){
-			gap2Start = start-oldNode.getStart();
-			gap2End = oldNode.getEnd()-end;
+		if(newNode!=null){
+			gap2Start = start-newNode.getStart();
+			gap2End = newNode.getEnd()-end;
 		}
 		
 		Node selectedParent = null;
@@ -69,13 +72,12 @@ public class Node {
 		}
 		if(gap2Start>=0 && gap2End>=0 && fittingScore>=(gap2Start + gap2End)){
 			fittingScore = gap2Start + gap2End;
-			selectedParent = oldNode;
+			selectedParent = newNode;
 		}
 		
 		if(fittingScore>=0){
 			return selectedParent;
 		}
-		
 		return null;
 	}
 	
@@ -112,6 +114,9 @@ public class Node {
 	}
 
 	public boolean equals(Node node){
+		if(node==null){
+			return false;
+		}
 		return this.start==node.start && this.end==node.end && this.type==node.type;
 	}
 
@@ -147,7 +152,7 @@ public class Node {
 		if(node == null){
 			return false;
 		}
-		return start>node.start && end<node.end;
+		return start>=node.start && end<=node.end;
 	}
 	
 	

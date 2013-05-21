@@ -20,7 +20,8 @@ public class Test {
 	    else if (val == arg1) {
 	    	arg1 = (arg1+arg2)/2;
 			System.out.println("LOL");
-		} else {
+		}
+	    else {
 			val += 1;
 			if (val == 3) {
 				System.out.println("poil aux doigts!");

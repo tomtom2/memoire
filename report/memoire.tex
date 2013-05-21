@@ -85,19 +85,25 @@
     Sopra Banking Software - R\&D
 }
 
+% mots clef
+\def\keyWords{
+    automatic test generation, ioLTS/ioPDS, FSM/EFSM, SMT solvers.
+}
+
 
 
 % Re'sume' en franc,ais avec mots-cle's
 \def\ResumeFrancais{
-    R\'esum\'e en fran\c{c}ais obligatoire.
+    Nous nous intéressons ici à l'automatisation des de la génération des cas de tests pour les programmes orientés objets. Le travaille effectué concerne les programmes java, les principes exposés s'applique à tout programme orienté objet.\\
+    Il existe déjà des outils de génération de tests. Le travail qui suit est un état de l'art des techniques existantes et une proposition de théorie/prototype basé sur les solveurs SMT.
     \\[2mm]
-    {\bf Mots-cl\'es : } mot-cl\'es  obligatoires.
+    {\bf Mots-cl\'es : } \keyWords
 }
 
 \def\Resume{
-    Summary.
+    Summary...
     \\[2mm]
-    {\bf Key-words : } some key words...
+    {\bf Key-words : } \keyWords
 }
 
 
@@ -178,11 +184,15 @@ Les tests d'intégration visent à valider la bonne interaction entre plusieurs 
 \addcontentsline{toc}{subsection}{System tests}
 Comme on peut s'en douter, les tests système permettent de contrôler le système dans son ensemble.
 
-\section*{Testing by contract}
-\addcontentsline{toc}{section}{Testing by contract}
-L'introduction de contrats dans le code permet de définir les conditions de début, de fin, et les constantes d'exécution.
+%\section*{Testing by contract}
+%\addcontentsline{toc}{section}{Testing by contract}
+%L'introduction de contrats dans le code permet de définir les conditions de début, de fin, et les constantes d'exécution.
+
 \section*{Mutation testing}
 \addcontentsline{toc}{section}{Mutation testing}
+Mutation testing is a method that mesures the "quality" of a test suite.\\
+As detailed in $[2.1]$, the methode consists in introducing small modification in the systeme (ex: switch a "+" into a "-") and run the test suite on the modified system, also called the mutant. If the test suite raises an failure, the mutant is "killed".\\
+Of course, a test suite should test every possible action of the system and thus, should kill 100\% of mutants.
 
 \section*{Test automation}
 \addcontentsline{toc}{section}{Test automation}
