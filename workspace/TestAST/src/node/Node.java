@@ -43,9 +43,18 @@ public class Node {
 		return currentGap1<=oldGap && currentGap1>=0;
 	}
 	
-//	public boolean isContainedBy(ConditionalNode parent){
-//		return parent.start<=start && parent.end>=end;
-//	}
+	public boolean isElseChild(){
+		if(parent instanceof ConditionalNode){
+			if(((ConditionalNode)parent).getElseChild()==null){
+				return false;
+			}
+			else{
+				return ((ConditionalNode)parent).getElseChild().equals(this);
+			}
+		}
+		
+		return false;
+	}
 	
 	public Node isBetterContainedBy(Node bestContainer, Node newNode){
 		if(!this.isContainedBy(newNode)){

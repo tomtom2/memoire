@@ -11,6 +11,8 @@ import node.Node;
 public class NodeStore {
 
 	private ArrayList<Node> nodes = new ArrayList<Node>();
+	private Node start;
+	private Node end;
 
 	public NodeStore() {
 		Node start = new Node();
@@ -18,7 +20,16 @@ public class NodeStore {
 		start.setType("start");
 		start.setStart(0);
 		start.setEnd(0);
-		nodes.add(start);
+		this.start = start;
+		nodes.add(this.start);
+
+		Node end = new Node();
+		end.setBody("end");
+		end.setType("end");
+		end.setStart(-1);
+		end.setEnd(-1);
+		this.end = end;
+		nodes.add(this.end);
 	}
 
 	public void addNode(Node node) {
@@ -72,11 +83,15 @@ public class NodeStore {
 	private void makeParentLink(ConditionalNode node) {
 		Node parentContainer = findBestParentContainer(node);
 		Node parent = this.findParent(node);
-		
+
 		if (parentContainer == null) {
+			if (parent != null) {
+				parent.setChild(node);
+				node.setParent(parent);
+			}
 			return;
 		}
-		if(!parentContainer.equals(parent) && parent != null){
+		if (!parentContainer.equals(parent) && parent != null) {
 			parent.setChild(node);
 			node.setParent(parent);
 			System.out.println("create cond. link (alternative) : ["
@@ -106,8 +121,8 @@ public class NodeStore {
 				containedParent.setChild(node);
 				node.setParent(containedParent);
 				System.out.println("create cond. link : ["
-						+ containedParent.getBody() + "] --> [" + node.getBody()
-						+ "]");
+						+ containedParent.getBody() + "] --> ["
+						+ node.getBody() + "]");
 			}
 		}
 	}
@@ -162,16 +177,18 @@ public class NodeStore {
 
 	private Node findBestParentContainer(Node node) {
 		Node bestContainer = null;
-		System.out.println("looking for bestParentContainer node = " + node.getBody() + " [" + node.getStart()
-				+ ":" + node.getEnd() + "]");
+		System.out.println("looking for bestParentContainer node = "
+				+ node.getBody() + " [" + node.getStart() + ":" + node.getEnd()
+				+ "]");
 		for (Node oldNode : nodes) {
 			if (bestContainer == null && node.isContainedBy(oldNode)) {
 				bestContainer = oldNode;
 			} else {
 				if (bestContainer != null) {
 					System.out
-							.println("best container for "+node.getBody()+"[" + node.getStart()
-									+ ":" + node.getEnd() + "] between ["
+							.println("best container for " + node.getBody()
+									+ "[" + node.getStart() + ":"
+									+ node.getEnd() + "] between ["
 									+ bestContainer.getStart() + ":"
 									+ bestContainer.getEnd() + "] and ["
 									+ oldNode.getStart() + ":"
@@ -179,7 +196,7 @@ public class NodeStore {
 				}
 				bestContainer = node
 						.isBetterContainedBy(bestContainer, oldNode);
-				//System.out.println("--> ["+bestContainer.getStart()+":"+bestContainer.getEnd()+"]\n");
+				// System.out.println("--> ["+bestContainer.getStart()+":"+bestContainer.getEnd()+"]\n");
 			}
 		}
 		if (bestContainer != null) {
@@ -206,16 +223,15 @@ public class NodeStore {
 		System.out.println("looking for parent...");
 		Node parent = null;
 		parent = findBestParentContainer(node);
-		
-		if(parent == null){
+
+		if (parent == null) {
 			for (Node oldNode : nodes) {
-				if(oldNode.isBetterParentFor(parent, node)){
+				if (oldNode.isBetterParentFor(parent, node)) {
 					parent = oldNode;
 				}
 			}
 			return parent;
-		}
-		else{
+		} else {
 			Node lastParentTrial = new Node();
 			while (!parent.equals(lastParentTrial) && parent.hasChild()) {
 				lastParentTrial = parent;
@@ -223,7 +239,6 @@ public class NodeStore {
 						&& node.getEnd() <= parent.getChild().getEnd()) {
 					parent = parent.getChild();
 				} else if (parent instanceof ConditionalNode) {
-					// -TODO
 					if (((ConditionalNode) parent).getElseChild() != null) {
 						if (node.getStart() >= ((ConditionalNode) parent)
 								.getElseChild().getStart()
@@ -232,9 +247,7 @@ public class NodeStore {
 							parent = ((ConditionalNode) parent).getElseChild();
 						}
 					}
-				}
-				else if (parent instanceof ActionNode && parent.hasChild()) {
-					// -TODO
+				} else if (parent instanceof ActionNode && parent.hasChild()) {
 					if (((ConditionalNode) parent).getElseChild() != null) {
 						if (node.getStart() > ((ConditionalNode) parent)
 								.getElseChild().getStart()
@@ -243,8 +256,7 @@ public class NodeStore {
 							parent = ((ConditionalNode) parent).getElseChild();
 						}
 					}
-				}
-				else {
+				} else {
 					break;
 				}
 			}
@@ -253,7 +265,7 @@ public class NodeStore {
 	}
 
 	public boolean contains(Node node) {
-		if(node.getType().equals("") || node.getBody().equals("")){
+		if (node.getType().equals("") || node.getBody().equals("")) {
 			return true;
 		}
 		for (Node containedNode : nodes) {
@@ -264,19 +276,138 @@ public class NodeStore {
 		return false;
 	}
 
+	private void removeTemporaryNodeLinks(Node node) {
+		if (node.getType().startsWith("tmp")) {
+			if (node.isElseChild()) {
+				((ConditionalNode) node.getParent()).setElseChild(node
+						.getChild());
+				node.getChild().setParent(node.getParent());
+				node.setChild(null);
+				node.setParent(null);
+			} else {
+				node.getParent().setChild(node.getChild());
+				node.getChild().setParent(node.getParent());
+				node.setChild(null);
+				node.setParent(null);
+			}
+		}
+	}
+	private void removeTemporaryNodes() {
+		ArrayList<Node> nodsToRemove = new ArrayList<Node>();
+		for(Node n : nodes){
+			if(n.getType().startsWith("tmp")){
+				removeTemporaryNodeLinks(n);
+				nodsToRemove.add(n);
+			}
+		}
+		for(Node n : nodsToRemove){
+			nodes.remove(n);
+		}
+	}
+
+	private void setAncore(ConditionalNode node) {
+		// TODO
+		Node potentialAncore = findAncoreOnIfBrancheOf(node);
+		if (potentialAncore == null) {
+			potentialAncore = findChildFor(node);
+		} else {
+			if (findLeafOnElseBrancheOf(node) == null) {
+				node.setElseChild(potentialAncore);
+			} else {
+				findLeafOnElseBrancheOf(node).setChild(potentialAncore);
+			}
+			return;
+		}
+//		if (potentialAncore == null) {
+//			node.setChild(end);
+//		} else {
+//			// if(findLeafOnIfBrancheOf(node)==null){
+//			// node.setElseChild(potentialAncore);
+//			// }
+//			if (findLeafOnElseBrancheOf(node) == null) {
+//				node.setElseChild(potentialAncore);
+//			} else {
+//				findLeafOnElseBrancheOf(node).setChild(potentialAncore);
+//			}
+//		}
+	}
+
+	private Node findAncoreOnIfBrancheOf(ConditionalNode node) {
+		Node ancore = node;
+		while (ancore.hasChild()) {
+			ancore = ancore.getChild();
+			if (!ancore.isContainedBy(node)) {
+				return ancore;
+			}
+		}
+		return null;
+	}
+
+	private Node findLeafOnElseBrancheOf(ConditionalNode node) {
+		Node leaf = node.getElseChild();
+		if (leaf == null) {
+			return null;
+		}
+		while (leaf.hasChild()) {
+			leaf = leaf.getChild();
+			if (leaf.isContainedBy(node)) {
+				return leaf;
+			}
+		}
+		return null;
+	}
+
+	private Node findChildFor(ConditionalNode node) {
+		Node child = null;
+		// TODO
+		return child;
+	}
+
+	public void regularize() {
+		removeTemporaryNodes();
+		for (Node node : nodes) {
+			if (node instanceof ConditionalNode) {
+				setAncore((ConditionalNode) node);
+			}
+		}
+	}
+
 	public void makeGraph(String path) {
 		Dot dot = new Dot("my_graph", 0);
 		for (Node node : nodes) {
-			if(node.hasChild()){
-				String from = "\""+node.getBody().replace("\"", "'")+" ["+node.getStart()+":"+node.getEnd()+"]\"";
-				String to = "\""+node.getChild().getBody().replace("\"", "'")+" ["+node.getChild().getStart()+":"+node.getChild().getEnd()+"]\"";
-				dot.addRelation(from, to, "");
+			if (node.hasChild()) {
+				String label = "";
+				String from = "\"" + node.getBody().replace("\"", "'") + " ["
+						+ node.getStart() + ":" + node.getEnd() + "]\"";
+				String to = "\"" + node.getChild().getBody().replace("\"", "'")
+						+ " [" + node.getChild().getStart() + ":"
+						+ node.getChild().getEnd() + "]\"";
+				if (node instanceof ConditionalNode) {
+					dot.addShapeRelation(from, "diamond");
+					label = "true";
+				}
+				if (node.getChild() instanceof ConditionalNode) {
+					dot.addShapeRelation(to, "diamond");
+				}
+				dot.addRelation(from, to, label);
 			}
-			if(node instanceof ConditionalNode){
-				if(((ConditionalNode)node).getElseChild()!=null){
-					String from = "\""+node.getBody().replace("\"", "'")+" ["+node.getStart()+":"+node.getEnd()+"]\"";
-					String to = "\""+((ConditionalNode) node).getElseChild().getBody().replace("\"", "'")+" ["+((ConditionalNode) node).getElseChild().getStart()+":"+((ConditionalNode) node).getElseChild().getEnd()+"]\"";
-					dot.addRelation(from, to, "");
+			if (node instanceof ConditionalNode) {
+				if (((ConditionalNode) node).getElseChild() != null) {
+					String from = "\"" + node.getBody().replace("\"", "'")
+							+ " [" + node.getStart() + ":" + node.getEnd()
+							+ "]\"";
+					String to = "\""
+							+ ((ConditionalNode) node).getElseChild().getBody()
+									.replace("\"", "'")
+							+ " ["
+							+ ((ConditionalNode) node).getElseChild()
+									.getStart() + ":"
+							+ ((ConditionalNode) node).getElseChild().getEnd()
+							+ "]\"";
+					if (((ConditionalNode) node).getElseChild() instanceof ConditionalNode) {
+						dot.addShapeRelation(to, "diamond");
+					}
+					dot.addRelation(from, to, "false");
 				}
 			}
 		}
@@ -297,6 +428,5 @@ public class NodeStore {
 	public ArrayList<Node> getNodes() {
 		return nodes;
 	}
-	
-	
+
 }

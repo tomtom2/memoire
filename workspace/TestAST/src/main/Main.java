@@ -74,6 +74,7 @@ public class Main {
 		final CompilationUnit cuM = (CompilationUnit) parserM.createAST(null);
         cuM.accept(new Visitor(cuM));
         
+        viz.getStore().regularize();
         viz.getStore().makeGraph("/home/thomas/my_graph.dot");
         
         System.out.println("\n\nSUMMARY:");

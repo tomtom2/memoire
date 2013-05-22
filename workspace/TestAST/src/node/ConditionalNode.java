@@ -12,10 +12,12 @@ public class ConditionalNode extends Node {
 		child = new Node(node.getThenStatement());
 		child.setBody("tmp_if:"+node.getExpression());
 		child.setType("tmp");
+		child.setParent(this);
 		if(node.getElseStatement()!=null){
 			elseChild = new Node(node.getElseStatement());
 			elseChild.setBody("tmp_else:"+node.getExpression());
 			elseChild.setType("tmp");
+			elseChild.setParent(this);
 		}
 	}
 	public ConditionalNode(){

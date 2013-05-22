@@ -20,6 +20,11 @@ public class Dot {
 		relations.add(line);
 	}
 	
+	public void addShapeRelation(String nodeName, String shape){
+		String line = nodeName+" [shape="+shape+"];";
+		relations.add(line);
+	}
+	
 	public void makeGraph(String path){
 		FileWriter fw = null;
 		try {

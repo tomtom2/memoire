@@ -10,12 +10,15 @@ public class Test {
 		if (a < arg1) {
 			val = arg1;
 		}
-
 		if (val < arg2) {
 			val += arg2;
 			if (val * val < arg1) {
 				System.out.println("val est plus petit que 1...");
 			}
+			else{
+				val+=1;
+			}
+			val+=1;
 		}
 	    else if (val == arg1) {
 	    	arg1 = (arg1+arg2)/2;
