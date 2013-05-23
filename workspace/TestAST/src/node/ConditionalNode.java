@@ -9,6 +9,7 @@ public class ConditionalNode extends Node {
 
 	public ConditionalNode(IfStatement node){
 		super(node);
+		this.shape = "diamond";
 		child = new Node(node.getThenStatement());
 		child.setBody("tmp_if:"+node.getExpression());
 		child.setType("tmp");

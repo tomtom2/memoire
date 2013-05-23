@@ -18,11 +18,12 @@ public class Test {
 			else{
 				val+=1;
 			}
-			val+=1;
+			val+=2;
 		}
 	    else if (val == arg1) {
 	    	arg1 = (arg1+arg2)/2;
 			System.out.println("LOL");
+			return 0+0;
 		}
 	    else {
 			val += 1;
@@ -31,6 +32,7 @@ public class Test {
 			}
 		}
 		val = Math.abs(val);
+		val = (int) Math.sqrt(val);
 		return val;
 	}
 }

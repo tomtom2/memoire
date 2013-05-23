@@ -11,6 +11,7 @@ import org.eclipse.jdt.core.dom.Block;
 import org.eclipse.jdt.core.dom.ConditionalExpression;
 import org.eclipse.jdt.core.dom.ExpressionStatement;
 import org.eclipse.jdt.core.dom.IfStatement;
+import org.eclipse.jdt.core.dom.ReturnStatement;
 import org.eclipse.jdt.core.dom.StructuralPropertyDescriptor;
 
 
@@ -31,19 +32,17 @@ public class InsideMethodVisitor extends ASTVisitor {
 	public boolean visit(ExpressionStatement node) {
 		//System.out.println("ExpressionStatement Exp: " + node.getExpression());
 		ActionNode actionNode = new ActionNode(node);
-		System.out.println("adding action : ["+actionNode.getStart()+":"+actionNode.getEnd()+"]");
+		//System.out.println("adding action : ["+actionNode.getStart()+":"+actionNode.getEnd()+"]");
 		store.addNode(actionNode);
 		return true;
 	}
-//	public boolean visit(ASTNode node) {
-//		System.out.println("ASTNode: " + node);
-//		return true;
-//	}
-//	
+	public boolean visit(ReturnStatement node) {
+		ActionNode returnNode = new ActionNode(node);
+		store.addNode(returnNode);
+		return true;
+	}
+	
 	public boolean visit(IfStatement node) {
-//		System.out.println("IfStatement: " + node.toString().substring(0, Math.min(15, node.toString().length())));
-//		System.out.println("["+node.getStartPosition()+", "+(node.getStartPosition()+node.getLength())+"]");
-//		System.out.println("create instance of ConditionalNode");
 		System.out.println("Vivitor exp. : "+node.getExpression());
 		ConditionalNode condNode = new ConditionalNode(node);
 		condNode.setType("IF");

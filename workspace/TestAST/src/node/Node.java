@@ -15,6 +15,8 @@ public class Node {
 	protected Node child;
 	protected Node parent;
 	
+	protected String shape = "";
+	
 	
 	public Node(ASTNode astNode){
 		start = astNode.getStartPosition();
@@ -57,7 +59,7 @@ public class Node {
 	}
 	
 	public Node isBetterContainedBy(Node bestContainer, Node newNode){
-		if(!this.isContainedBy(newNode)){
+		if(!this.isContainedBy(newNode) || newNode.equals(this)){
 			return bestContainer;
 		}
 		int gap1Start = -1;
@@ -162,6 +164,14 @@ public class Node {
 			return false;
 		}
 		return start>=node.start && end<=node.end;
+	}
+
+	public String getShape() {
+		return shape;
+	}
+
+	public void setShape(String shape) {
+		this.shape = shape;
 	}
 	
 	

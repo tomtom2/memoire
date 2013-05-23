@@ -304,8 +304,45 @@ public class NodeStore {
 			nodes.remove(n);
 		}
 	}
+	
+	private void removeElseNodeLinks(Node node){
+		if(node instanceof ConditionalNode && node.getType().equals("ELSE")){
+			if(node==null || node.getParent()==null || node.getChild()==null){
+				return;
+			}
+			if(node.getParent() instanceof ConditionalNode){
+				System.out.println("processing else node : "+node.getParent().getBody()+" --> "+node.getBody()+" --> "+node.getChild().getBody());
+				((ConditionalNode) node.getParent()).setElseChild(node.getChild());
+				node.getChild().setParent(node.getParent());
+				ConditionalNode parent = (ConditionalNode) node.getParent();
+				node.setChild(null);
+				node.setParent(null);
+				((ConditionalNode)node).setElseChild(null);
+				System.out.println("\tresult : "+parent.getBody()+" --> "+parent.getElseChild().getBody());
+			}
+		}
+	}
+	private void elseNodeHandling(){
+		ArrayList<Node> nodsToRemove = new ArrayList<Node>();
+		for(Node node : nodes){
+			if(node.getType().equals("ELSE")){
+				removeElseNodeLinks(node);
+				nodsToRemove.add(node);
+			}
+		}
+		for(Node n : nodsToRemove){
+			nodes.remove(n);
+		}
+	}
+	private void returnNodeHandling(){
+		for(Node node : nodes){
+			if(node.getType().equals("RETURN")){
+				node.setChild(end);
+			}
+		}
+	}
 
-	private void setAncore(ConditionalNode node) {
+	private void setAnchor(ConditionalNode node) {
 		// TODO
 		Node potentialAncore = findAncoreOnIfBrancheOf(node);
 		if (potentialAncore == null) {
@@ -330,6 +367,24 @@ public class NodeStore {
 //				findLeafOnElseBrancheOf(node).setChild(potentialAncore);
 //			}
 //		}
+	}
+	private void setAnchor(ActionNode node){
+		if(node.hasChild()){
+			return;
+		}
+		Node container = findBestParentContainer(node);
+		if(container==null){
+			//TODO?
+			return;
+		}
+		System.out.println("\n\tCONTAINER OF : "+node.getBody()+" is : "+container.getBody());
+		Node selectedAnchor = end;
+		for(Node graphNode : nodes){
+			if(graphNode.getStart()>node.getEnd() && (graphNode.getStart()<selectedAnchor.getStart() || selectedAnchor.equals(end)) && !graphNode.isContainedBy(container)){
+				selectedAnchor = graphNode;
+			}
+		}
+		node.setChild(selectedAnchor);
 	}
 
 	private Node findAncoreOnIfBrancheOf(ConditionalNode node) {
@@ -359,19 +414,33 @@ public class NodeStore {
 
 	private Node findChildFor(ConditionalNode node) {
 		Node child = null;
-		// TODO
+		//TODO
 		return child;
 	}
 
+	/**
+	 * 
+	 */
 	public void regularize() {
 		removeTemporaryNodes();
 		for (Node node : nodes) {
 			if (node instanceof ConditionalNode) {
-				setAncore((ConditionalNode) node);
+				setAnchor((ConditionalNode) node);
 			}
 		}
+		elseNodeHandling();
+		for (Node node : nodes) {
+			if(node instanceof ActionNode){
+				setAnchor((ActionNode) node);
+			}
+		}
+		returnNodeHandling();
 	}
 
+	/**
+	 * 
+	 * @param path
+	 */
 	public void makeGraph(String path) {
 		Dot dot = new Dot("my_graph", 0);
 		for (Node node : nodes) {
@@ -382,8 +451,11 @@ public class NodeStore {
 				String to = "\"" + node.getChild().getBody().replace("\"", "'")
 						+ " [" + node.getChild().getStart() + ":"
 						+ node.getChild().getEnd() + "]\"";
+				if(!node.getChild().getShape().equals("")){
+					dot.addShapeRelation(to, node.getChild().getShape());
+				}
 				if (node instanceof ConditionalNode) {
-					dot.addShapeRelation(from, "diamond");
+					dot.addShapeRelation(from, node.getShape());
 					label = "true";
 				}
 				if (node.getChild() instanceof ConditionalNode) {
