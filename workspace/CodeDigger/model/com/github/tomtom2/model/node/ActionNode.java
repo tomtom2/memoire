@@ -17,7 +17,12 @@ public class ActionNode extends Node {
 		// TODO Auto-generated constructor stub
 		super(node);
 		this.type = "RETURN";
-		this.body = "return : "+node.getExpression().toString();
+		if(node.getExpression()==null){
+			this.body = "return : null";
+		}
+		else{
+			this.body = "return : "+node.getExpression().toString();
+		}
 		this.shape = "box";
 	}
 	public ConditionalNode getConditionalParent() {

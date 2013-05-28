@@ -33,8 +33,6 @@ public class NodeStore {
 	}
 
 	public void addNode(Node node) {
-		System.out.println("adding : [" + node.getBody() + "] "
-				+ node.getStart() + ":" + node.getEnd());
 		if (node instanceof ConditionalNode) {
 			addNode((ConditionalNode) node);
 			return;
@@ -94,17 +92,12 @@ public class NodeStore {
 		if (!parentContainer.equals(parent) && parent != null) {
 			parent.setChild(node);
 			node.setParent(parent);
-			System.out.println("create cond. link (alternative) : ["
-					+ parentContainer.getBody() + "] --> [" + node.getBody()
-					+ "]");
+
 			return;
 		}
 		if (!parentContainer.hasChild()) {
 			parentContainer.setChild(node);
 			node.setParent(parentContainer);
-			System.out.println("create cond. link (first child) : ["
-					+ parentContainer.getBody() + "] --> [" + node.getBody()
-					+ "]");
 		} else {
 			Node containedParent = null;
 			if (parentContainer.getChild().getEnd() < node.getStart()) {
@@ -120,9 +113,6 @@ public class NodeStore {
 			if (containedParent != null) {
 				containedParent.setChild(node);
 				node.setParent(containedParent);
-				System.out.println("create cond. link : ["
-						+ containedParent.getBody() + "] --> ["
-						+ node.getBody() + "]");
 			}
 		}
 	}
@@ -148,13 +138,6 @@ public class NodeStore {
 		if (!parentContainer.hasChild()) {
 			parentContainer.setChild(node);
 			node.setParent(parentContainer);
-
-			System.out.println("create action link : ["
-					+ parentContainer.getBody() + "] --> [" + node.getBody()
-					+ "]");
-			System.out.println("######################################");
-			printLinks();
-			System.out.println("######################################");
 		} else {
 			Node parent = parentContainer.getChild();
 			while (parent.hasChild()
@@ -163,42 +146,20 @@ public class NodeStore {
 			}
 			parent.setChild(node);
 			node.setParent(parent);
-			System.out.println("create action link : [" + parent.getBody()
-					+ "] --> [" + node.getBody() + "]");
-			System.out.println("**************************************");
-			printLinks();
-			System.out.println("**************************************");
 		}
 	}
 
 	private Node findBestParentContainer(Node node) {
 		Node bestContainer = null;
-		System.out.println("looking for bestParentContainer node = "
-				+ node.getBody() + " [" + node.getStart() + ":" + node.getEnd()
-				+ "]");
 		for (Node oldNode : nodes) {
 			if (bestContainer == null && node.isContainedBy(oldNode)) {
 				bestContainer = oldNode;
 			} else {
 				if (bestContainer != null) {
-					System.out
-							.println("best container for " + node.getBody()
-									+ "[" + node.getStart() + ":"
-									+ node.getEnd() + "] between ["
-									+ bestContainer.getStart() + ":"
-									+ bestContainer.getEnd() + "] and ["
-									+ oldNode.getStart() + ":"
-									+ oldNode.getEnd() + "]");
 				}
 				bestContainer = node
 						.isBetterContainedBy(bestContainer, oldNode);
-				// System.out.println("--> ["+bestContainer.getStart()+":"+bestContainer.getEnd()+"]\n");
 			}
-		}
-		if (bestContainer != null) {
-			System.out.println("bestContainer = " + bestContainer.getBody()
-					+ " [" + bestContainer.getStart() + ":"
-					+ bestContainer.getEnd() + "]");
 		}
 
 		return bestContainer;
@@ -216,7 +177,6 @@ public class NodeStore {
 	}
 
 	private Node findParent(ConditionalNode node) {
-		System.out.println("looking for parent...");
 		Node parent = null;
 		parent = findBestParentContainer(node);
 
@@ -307,14 +267,11 @@ public class NodeStore {
 				return;
 			}
 			if(node.getParent() instanceof ConditionalNode){
-				System.out.println("processing else node : "+node.getParent().getBody()+" --> "+node.getBody()+" --> "+node.getChild().getBody());
 				((ConditionalNode) node.getParent()).setElseChild(node.getChild());
 				node.getChild().setParent(node.getParent());
-				ConditionalNode parent = (ConditionalNode) node.getParent();
 				node.setChild(null);
 				node.setParent(null);
 				((ConditionalNode)node).setElseChild(null);
-				System.out.println("\tresult : "+parent.getBody()+" --> "+parent.getElseChild().getBody());
 			}
 		}
 	}
@@ -339,7 +296,7 @@ public class NodeStore {
 	}
 
 	private void setAnchor(ConditionalNode node) {
-		// TODO
+		// TODO - not robust -> depends on the insertion order
 		Node potentialAncore = findAncoreOnIfBrancheOf(node);
 		if (potentialAncore == null) {
 			potentialAncore = findChildFor(node);
@@ -351,18 +308,6 @@ public class NodeStore {
 			}
 			return;
 		}
-//		if (potentialAncore == null) {
-//			node.setChild(end);
-//		} else {
-//			// if(findLeafOnIfBrancheOf(node)==null){
-//			// node.setElseChild(potentialAncore);
-//			// }
-//			if (findLeafOnElseBrancheOf(node) == null) {
-//				node.setElseChild(potentialAncore);
-//			} else {
-//				findLeafOnElseBrancheOf(node).setChild(potentialAncore);
-//			}
-//		}
 	}
 	private void setAnchor(ActionNode node){
 		if(node.hasChild()){
@@ -370,10 +315,8 @@ public class NodeStore {
 		}
 		Node container = findBestParentContainer(node);
 		if(container==null){
-			//TODO?
 			return;
 		}
-		System.out.println("\n\tCONTAINER OF : "+node.getBody()+" is : "+container.getBody());
 		Node selectedAnchor = end;
 		for(Node graphNode : nodes){
 			if(graphNode.getStart()>node.getEnd() && (graphNode.getStart()<selectedAnchor.getStart() || selectedAnchor.equals(end)) && !graphNode.isContainedBy(container)){
@@ -437,8 +380,8 @@ public class NodeStore {
 	 * 
 	 * @param path
 	 */
-	public void makeGraph(String path) {
-		Dot dot = new Dot("my_graph");
+	public void makeGraph(String path, String name) {
+		Dot dot = new Dot(name);
 		for (Node node : nodes) {
 			if (node.hasChild()) {
 				String label = "";
