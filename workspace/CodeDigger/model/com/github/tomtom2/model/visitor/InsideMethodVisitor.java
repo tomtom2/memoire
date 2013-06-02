@@ -19,20 +19,20 @@ public class InsideMethodVisitor extends ASTVisitor {
 	
 	
 	public boolean visit(ExpressionStatement node) {
-		System.out.println("expression : "+node.getExpression());
+		//System.out.println("expression : "+node.getExpression());
 		ActionNode actionNode = new ActionNode(node);
 		store.addNode(actionNode);
 		return true;
 	}
 	public boolean visit(ReturnStatement node) {
-		System.out.println("Return : "+node.getExpression());
+		//System.out.println("Return : "+node.getExpression());
 		ActionNode returnNode = new ActionNode(node);
 		store.addNode(returnNode);
 		return true;
 	}
 	
 	public boolean visit(IfStatement node) {
-		System.out.println("if : "+node.getExpression());
+		//System.out.println("if : "+node.getExpression());
 		ConditionalNode condNode = new ConditionalNode(node);
 		condNode.setType("IF");
 		condNode.setBody(node.getExpression().toString());

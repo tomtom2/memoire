@@ -1,0 +1,30 @@
+digraph LTS_Graph {
+rankdir=LR;
+
+node [shape="none"]; start end;
+
+node [shape="circle",color="black"]; s0 s1 s2 s3 s4 s5;
+node [shape="diamond", color="black"]; d0 d1 d2;
+
+
+start -> s0;
+
+s0 -> d0 [label="act1"];
+
+d0 -> s1 [label="phi1"];
+d0 -> d1 [label="not phi1"];
+
+s1 -> d2 [label="act2"];
+
+d1 -> s2 [label="phi2"];
+d1 -> s4 [label="not phi2"];
+s4 -> end [label="out1"];
+
+s2 -> end [label="out2"];
+
+d2 -> s5 [label="phi3"];
+d2 -> s3 [label="not phi3"];
+s5 -> end [label="out3"];
+
+s3 -> end [label="act3"];
+}

@@ -14,9 +14,15 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.JTree;
+import javax.swing.JScrollPane;
 
 public class Index extends JFrame {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JPanel centerPanel;
 	private JPanel contentPane;
 
@@ -41,7 +47,7 @@ public class Index extends JFrame {
 	 */
 	public Index() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(200, 400, 450, 300);
+		setBounds(200, 600, 450, 300);
 		
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
@@ -49,8 +55,8 @@ public class Index extends JFrame {
 		JMenu fileMenu = new JMenu("File");
 		menuBar.add(fileMenu);
 		
-		JMenuItem newMenuItem = new JMenuItem("new");
-		newMenuItem.addActionListener(new ActionListener(){
+		JMenuItem openMenuItem = new JMenuItem("open");
+		openMenuItem.addActionListener(new ActionListener(){
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -63,13 +69,11 @@ public class Index extends JFrame {
 		            System.out.println(file.getAbsolutePath());
 		            ImageFrame frame = new ImageFrame(file.getAbsolutePath(), file.getName());
 		    		centerPanel.add(frame);
-//		    		centerPanel.revalidate();
-//		    		centerPanel.repaint();
 		        }
 			}
 			
 		});
-		fileMenu.add(newMenuItem);
+		fileMenu.add(openMenuItem);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -78,6 +82,12 @@ public class Index extends JFrame {
 		JPanel westPanel = new JPanel();
 		contentPane.add(westPanel, BorderLayout.WEST);
 		westPanel.setLayout(new BorderLayout(0, 0));
+		
+		JScrollPane scrollPane = new JScrollPane();
+		westPanel.add(scrollPane, BorderLayout.CENTER);
+		
+		JTree tree = new JTree();
+		scrollPane.setViewportView(tree);
 		
 		centerPanel = new JPanel();
 		contentPane.add(centerPanel, BorderLayout.CENTER);

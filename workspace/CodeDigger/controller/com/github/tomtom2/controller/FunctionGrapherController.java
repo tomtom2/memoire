@@ -2,9 +2,9 @@ package com.github.tomtom2.controller;
 
 import java.util.ArrayList;
 
-import com.github.tomtom2.model.Function;
+import com.github.tomtom2.model.ObjectModel;
 
 public class FunctionGrapherController {
 
-	private ArrayList<Function> functions = new ArrayList<Function>();
+	private ArrayList<ObjectModel> objects = new ArrayList<ObjectModel>();
 }

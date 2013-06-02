@@ -386,10 +386,9 @@ public class NodeStore {
 			if (node.hasChild()) {
 				String label = "";
 				String from = "\"" + node.getBody().replace("\"", "'") + " ["
-						+ node.getStart() + ":" + node.getEnd() + "]\"";
+						+ "\"";
 				String to = "\"" + node.getChild().getBody().replace("\"", "'")
-						+ " [" + node.getChild().getStart() + ":"
-						+ node.getChild().getEnd() + "]\"";
+						+ "\"";
 				if(!node.getChild().getShape().equals("")){
 					dot.addShapeRelation(to, node.getChild().getShape());
 				}
@@ -405,16 +404,11 @@ public class NodeStore {
 			if (node instanceof ConditionalNode) {
 				if (((ConditionalNode) node).getElseChild() != null) {
 					String from = "\"" + node.getBody().replace("\"", "'")
-							+ " [" + node.getStart() + ":" + node.getEnd()
-							+ "]\"";
+							+ "\"";
 					String to = "\""
 							+ ((ConditionalNode) node).getElseChild().getBody()
 									.replace("\"", "'")
-							+ " ["
-							+ ((ConditionalNode) node).getElseChild()
-									.getStart() + ":"
-							+ ((ConditionalNode) node).getElseChild().getEnd()
-							+ "]\"";
+							+ "\"";
 					if (((ConditionalNode) node).getElseChild() instanceof ConditionalNode) {
 						dot.addShapeRelation(to, "diamond");
 					}

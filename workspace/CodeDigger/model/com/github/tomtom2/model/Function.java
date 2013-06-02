@@ -9,7 +9,7 @@ import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
 public class Function {
 
 	private String name;
-	private List<SingleVariableDeclaration> parameters; //public, private...
+	private List<SingleVariableDeclaration> parameters;
 	private Map<String, String> arguments = new HashMap<String, String>();
 	private Cube cube = new Cube();
 	private NodeStore graph;

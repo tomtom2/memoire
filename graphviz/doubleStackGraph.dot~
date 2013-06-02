@@ -6,6 +6,7 @@ node [shape="none"]; start;
 node [shape="circle",color="black"]; a_0 a_1 a_2 a_3;
 node [shape="diamond", color="black"]; d_0 d_1 d_2;
 node [shape="circle",peripheries=2, style="filled", color="black"]; o_0 o_1 o_2 o_3;
+node [shape="none"]; o_0 o_1 o_2 o_3;
 
 
 start -> a_0;

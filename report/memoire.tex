@@ -77,7 +77,7 @@
 
 % Nom des encadrants
 \def\Encadrants{
-    \textbf{Encadrant(s)} \\
+    \textbf{Tutor(s)} \\
     Arnaud MAKALA
 }
 % Nom du laboratoire
@@ -91,20 +91,22 @@
 }
 
 
-
 % Re'sume' en franc,ais avec mots-cle's
 \def\ResumeFrancais{
-    La complexité des systèmes informatique s'est grandement accrue ces dernières décennies et la nécessité des tests devient de plus en plus évidente et délicate.
-Nous nous intéressons ici à l'automatisation des de la génération des cas de tests pour les programmes orientés objets. Le travaille effectué concerne les programmes java, les principes exposés s'applique à tout programme orienté objet.\\
-    Il existe déjà des outils de génération de tests tel que \textit{Pex} et \textit{Sage}. Le travail qui suit est un état de l'art des techniques existantes et une proposition de théorie/prototype basé sur les algorithmes d'optimisation sous contrainte et les solveurs SMT.
+La complexité des systèmes informatique devient de plus en plus importante, de même que les moyens qui doivent être mis en œuvre pour valider le bon fonctionnement des ces systèmes.
+    Nous nous intéressons ici à l'automatisation des de la génération des cas de tests pour les programmes orientés objets. Le travaille effectué concerne les programmes java, les principes exposés s'applique à tout programme orienté objet.\\
+    Il existe déjà des outils de génération de tests tel que \textit{Pex} et \textit{Sage}. Le travail qui suit est un état de l'art des techniques existantes et une proposition de théorie/prototype basé sur les algorithmes d'optimisation sous contrainte et les solveurs SMT.\\
+    L'objectif est de proposer une méthode de génération des tests système, sans spécification. C'est à dire qu'on veut générer une suite de tests qui assure une non régression du système.
     \\[2mm]
     {\bf Mots-cl\'es : } \keyWords
 }
 
-\def\Resume{
-    The complexity of software systems have considerably increased in the past decades and both the need and the difficulty of setting up correct test suits become more and more obvious.
-We are here interested in the automation of test case generation for object oriented software. Our work is based on java code only, but principles are the same for every object oriented program.\\
-    Some tools already handle the test case generation, such as \textit{Pex} or \textit{Sage}. In this paper, we establish a state of the art of test automation techniques and proposes a theory/prototype based on constraint optimisation algorithms and SMT solvers.
+\def\Abstract{
+The complexity of software systems have considerably increased in the past decades and both the need and the difficulty of setting up correct test suits become more and more obvious.
+    We are interested in the automation of test case generation for object oriented software. Our work is based on java code only, but principles are the same for every object oriented program.\\
+    Some tools already handle the test case generation, such as \textit{Pex} or \textit{Sage}. In this paper, we establish a state of the art of test automation techniques and proposes a theory/prototype based on constraint optimisation algorithms and SMT solvers.\\
+    The following work consists in setting up test suits at the system level, without specification. 
+In other words, we want to generate a test suits that ensures the non-regression of he system, without any human intervention.
     \\[2mm]
     {\bf Key-words : } \keyWords
 }
@@ -127,9 +129,9 @@ We are here interested in the automation of test case generation for object orie
 \ResumeFrancais\\[4mm]
 \newline
 \begin{center}
-{\bf Summary}
+{\bf Abstract}
 \end{center}
-\Resume\\[4mm]
+\Abstract\\[4mm]
 
 \newpage
 
@@ -158,7 +160,7 @@ We are here interested in the automation of test case generation for object orie
 
 \chapter*{Introduction}
 \addcontentsline{toc}{chapter}{Introduction}
-Blablabla...
+The complexity of software systems have considerably increased in the past decades and both the need and the difficulty of setting up correct test suits become more and more obvious.
 \newline
 \textbf{Contribution :}\\
 This paper proposes a model for white box testing of object oriented software.
@@ -175,11 +177,11 @@ This paper proposes a model for white box testing of object oriented software.
 \addcontentsline{toc}{chapter}{State of the art}
 
 
-\section*{Tests with JUnit}
-\addcontentsline{toc}{section}{Tests with JUnit}
+\section*{Common tools and notions}
+\addcontentsline{toc}{section}{Common tools and notions}
 
-\subsection*{Unit tests}
-\addcontentsline{toc}{subsection}{Unit tests}
+\subsection*{Unit tests with JUnit}
+\addcontentsline{toc}{subsection}{Unit tests with JUnit}
 Les tests unitaires ont pour but de prouver la validité d'un objet. Par exemple, on souhaite parcourir la totalité du code en lançant le programme avec des valeurs clef choisies par le programmeur chargé des tests.
 
 \subsection*{Integration tests}
@@ -196,8 +198,8 @@ Comme on peut s'en douter, les tests système permettent de contrôler le systè
 
 \section*{Mutation testing}
 \addcontentsline{toc}{section}{Mutation testing}
-Mutation testing is a method that mesures the "quality" of a test suite.\\
-As detailed in $[2.1]$, the methode consists in introducing small modification in the systeme (ex: switch a "+" into a "-") and run the test suite on the modified system, also called the mutant. If the test suite raises an failure, the mutant is "killed".\\
+Mutation testing is a method that measures the "quality" of a test suite.\\
+As detailed in $[2.1]$, the method consists in introducing small modification in the systeme (ex: switch a "+" into a "-") and run the test suite on the modified system, also called the mutant. If the test suite raises an failure, the mutant is "killed".\\
 Of course, a test suite should test every possible action of the system and thus, should kill 100\% of mutants.
 
 \section*{Test automation}
@@ -208,14 +210,54 @@ Of course, a test suite should test every possible action of the system and thus
 - MBT (Model-Based Testing)\\
 - SMT solvers (yices)\\
 
+\subsection*{Software systems as LTSs}
+\addcontentsline{toc}{subsection}{Software systems as LTSs}
+A common theory for testing is based on \textit{labelled transition systems}.
+\subsection*{Conformance testing}
+\addcontentsline{toc}{subsection}{Conformance testing}
+
+
 
 
 
 \chapter*{Idées et mise en œuvre}
 \addcontentsline{toc}{chapter}{Idées et mise en œuvre}
-- random testing\\
-- dynamic path construction leaded by coverage (récursive)\\
-- logic modelisation (FOL) and SMT solver\\
+
+\subsection*{Model of the system}
+\addcontentsline{toc}{subsection}{Model of the system}
+
+We are reasoning at the function level.\\
+Every function can be represented as a labelled transition system. The set labels is $L\ =\ I \cup U \cup A \cup D$ where :\\
+\begin{itemize}
+\item $I$ is a set of \textit{inputs}
+\item $U$ is a set of \textit{outputs}
+\item $A$ is a set of \textit{actions}
+\item $D$ is a set of \textit{decisions}
+\end{itemize}
+$ $\\
+\newline
+\begin{figure}[h!]
+   \caption{\label{étiquette} example}
+   \includegraphics[scale=0.3]{../graphviz/LTSExample.png}
+\end{figure}
+
+\subsection*{Generation of initial test data}
+\addcontentsline{toc}{subsection}{Generation of initial test data}
+
+
+
+
+\subsection*{extracting sets suits with our model}
+\addcontentsline{toc}{subsection}{extracting sets suits with our model}
+
+\begin{itemize}
+\item[$->$] random testing
+\item[$->$] dynamic path construction leaded by coverage (récursive)
+\item[$->$] logic modelisation (FOL) and SMT solver
+\item[$->$] equivalent computation
+\item[$->$] Bashir sliding
+\end{itemize}
+
 
 On raisonne sur le code source, et plus particulièrement sur des blocs de code. A partir de ce point, nous appellerons fonction élémentaire une partie de code dont la séquence d'exécution ne dépend d'aucune variable. Plus précisément, un code java qui ne contient pas d'accolades.\\
 \newline
@@ -250,6 +292,39 @@ En suivant notre modélisation, on obtient deux actions élémentaires:
 \chapter*{Réalisations}
 \addcontentsline{toc}{chapter}{Réalisations}
 
+
+
+--- vous décrirez la problématique de recherche qui vous intéresse\\
+\newline
+L'automatisation à 100\% des tests pour les programmes orienté objets. Pour un tel niveau d'automatisation, on ne peut bien sûr pas espérer obtenir une spécification de l'utilisateur. Nous traitenons donc les tests de non régression pricipalement. Notre contribution est la suivante: nous ne nous limitons pas aux tests unitaires, mais on veut tester le bon fonctionnement d'un systeme entier. On veut donc mettre au point des tests d'intégration et systeme efficaces.\\
+\newline
+\newline
+--- vous vous décrirez l'état de l'art\\
+\newline
+On se base sur la théorie \textbf{ioco}.\\
+\newline
+\newline
+--- vous esquisserez les résultats que vous avez obtenus, ainsi que  les directions de recherche qu'il vous reste à explorer\\
+\newline
+\begin{itemize}
+\item[$ 1) $] Pour un système simple, le problème est déjà résolu.
+\item[$ 2) $] Pour un systeme complexe, on cherche à isoler des sous-systeme et à définir des relation de dépendence du type \textit{master/slave} entre ceux-ci.
+\item[$ 3) $] On fait l'hypothèse que le code d'un sous-système est aussi la spécification attendu.
+\item[$ 4) $] On lance des tests de conformance de la théorie \textbf{ioco} basé sur les spécification de chaques systèmes et leur relationde dépendence.
+\end{itemize}
+$ $\\
+\newline
+\newline
+--- vous prendrez du temps pour expliquer les possibles écueils de ces directions de recherche et comment vous envisagez de les contourner.\\
+\newline
+Non non, pas d'écueils, j'te jure ;-)\\
+
+
+
+\begin{figure}[h!]
+   \caption{\label{étiquette} Exemple réel}
+   \includegraphics[scale=0.3]{../graphviz/realExemple.png}
+\end{figure}
 
 \chapter*{References}
 \addcontentsline{toc}{chapter}{References}

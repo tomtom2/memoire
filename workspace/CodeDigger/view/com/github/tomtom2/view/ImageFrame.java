@@ -2,14 +2,14 @@ package com.github.tomtom2.view;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 
 import javax.swing.ImageIcon;
-import javax.swing.JInternalFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
+import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 
-public class ImageFrame extends JInternalFrame {
+public class ImageFrame extends JFrame {
 
 	/**
 	 * 
@@ -38,24 +38,30 @@ public class ImageFrame extends JInternalFrame {
 	 * Create the frame.
 	 */
 	public ImageFrame(String imagePath, String imageName) {
-		setBounds(100, 100, 450, 300);
+		setBounds(200, 400, 450, 300);
 		this.imagePath = imagePath;
 		this.imageName = imageName;
 		
 		this.setTitle(imageName);
 		this.setVisible(true);
-		this.setClosable(true);
+		//this.setClosable(true);
 		this.setResizable(true);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		getContentPane().add(scrollPane, BorderLayout.NORTH);
+		getContentPane().add(scrollPane, BorderLayout.CENTER);
+		getContentPane().addMouseWheelListener(new MouseWheelListener(){
+
+			@Override
+			public void mouseWheelMoved(MouseWheelEvent arg0) {
+				System.out.println("imageWheel");
+			}
+			
+		});
 		
-		JPanel panel = new JPanel();
-		ImageIcon icon = new ImageIcon(imagePath);  
-	    JLabel label = new JLabel();  
-	    label.setIcon(icon);  
-	    panel.add(label); 
-		getContentPane().add(panel, BorderLayout.CENTER);
+		ImageIcon icon = new ImageIcon(imagePath);
+		ZoomablePanel panel = new ZoomablePanel(icon);
+		this.setSize(panel.getWidth(), panel.getHeight());
+	    scrollPane.setViewportView(panel);
 	}
 
 }
