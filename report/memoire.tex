@@ -227,19 +227,43 @@ A common theory for testing is based on \textit{labelled transition systems}.
 \addcontentsline{toc}{subsection}{Model of the system}
 
 We are reasoning at the function level.\\
-Every function can be represented as a labelled transition system. The set labels is $L\ =\ I \cup U \cup A \cup D$ where :\\
+Every function can be represented as a labelled transition system. The set of labels is $L\ =\ I \cup U \cup A \cup D$ where :\\
 \begin{itemize}
-\item $I$ is a set of \textit{inputs}
-\item $U$ is a set of \textit{outputs}
-\item $A$ is a set of \textit{actions}
-\item $D$ is a set of \textit{decisions}
+\item $I$ is a set of \textit{inputs} label
+\item $U$ is a set of \textit{outputs} label
+\item $A$ is a set of \textit{actions} label
+\item $F$ is a set of \textit{formula} label
 \end{itemize}
+And the set of states is $S\ = C \cup D$\\
+where $C$ is the set of common states and $D$ is the set of states preceding a \textit{decision}.
+We call \textit{parent} of a label $f \in F$ a node $d \in D$ such as:\\
+\[
+\exists s \in S, 
+d \xrightarrow{f} s\\
+\]
 $ $\\
 \newline
-\begin{figure}[h!]
-   \caption{\label{étiquette} example}
-   \includegraphics[scale=0.3]{../graphviz/LTSExample.png}
-\end{figure}
+The following graph represent a example function where:
+\begin{itemize}
+\item $I\ =\ \emptyset$
+\item $U\ =\ \{out1, out2, out3, out4\}$
+\item $A\ =\ \{act1, act2, act3\}$
+\item $F\ =\ \{phi1, phi2, phi3\}$
+\end{itemize}
+$ $\\
+\includegraphics[scale=0.3]{../graphviz/LTSExample.png}
+$ $\\
+\newline
+
+NB: The set of decisions label is associated with a set of state $\{d0, d1, d2\}$. Every transition from those states is a decision label i.e. \textbf{a first order formula}. We can also notice that decision states are the only multiple output states, and for a state $d$ with $n$ labels associated (every label corresponding to a FO formula $\phi_i$, $i\in[0, n]$)\\
+\newline
+1) For a set of inputs, the system is deterministic:\\
+$\forall i, j \in [0, n], i \neq j \Rightarrow \neg (\phi_i \wedge \phi_j)$\\
+\newline
+2) every set of input lead to a computation:\\
+$\forall i \in [0, n] $\\
+\[\displaystyle \neg (\bigvee_{\substack{j=0 \\ j \neq i}}^{n} \phi_j) \Rightarrow \phi_i \]
+
 
 \subsection*{Generation of initial test data}
 \addcontentsline{toc}{subsection}{Generation of initial test data}

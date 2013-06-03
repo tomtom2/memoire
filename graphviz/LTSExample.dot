@@ -3,7 +3,7 @@ rankdir=LR;
 
 node [shape="none"]; start end;
 
-node [shape="circle",color="black"]; s0 s1 s2 s3 s4 s5;
+node [shape="circle",color="black"]; s0 s1 s2 s3 s4 s5 s6;
 node [shape="diamond", color="black"]; d0 d1 d2;
 
 
@@ -24,7 +24,8 @@ s2 -> end [label="out2"];
 
 d2 -> s5 [label="phi3"];
 d2 -> s3 [label="not phi3"];
-s5 -> end [label="out3"];
+s5 -> s6 [label="act3"];
 
-s3 -> end [label="act3"];
+s3 -> end [label="out3"];
+s6 -> end [label="out4"];
 }
