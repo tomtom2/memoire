@@ -72,7 +72,7 @@
 
 % Date du rapport (dans la me^me langue que le titre)
 \def\DateRapport{
-    27 Mai 2013
+    June $6^{th}$, 2013
 }
 
 % Nom des encadrants
@@ -87,7 +87,7 @@
 
 % mots clef
 \def\keyWords{
-    test generation, data generation, LTS, SMT solvers.
+    test generation, input data generation, LTS, ioco, efficient path exploration, SMT solvers.
 }
 
 
@@ -95,18 +95,20 @@
 \def\ResumeFrancais{
 La complexité des systèmes informatique devient de plus en plus importante, de même que les moyens qui doivent être mis en œuvre pour valider le bon fonctionnement des ces systèmes.
     Nous nous intéressons ici à l'automatisation des de la génération des cas de tests pour les programmes orientés objets. Le travaille effectué concerne les programmes java, les principes exposés s'applique à tout programme orienté objet.\\
-    Il existe déjà des outils de génération de tests tel que \textit{Pex} et \textit{Sage}. Le travail qui suit est un état de l'art des techniques existantes et une proposition de théorie/prototype basé sur les algorithmes d'optimisation sous contrainte et les solveurs SMT.\\
-    L'objectif est de proposer une méthode de génération des tests système, sans spécification. C'est à dire qu'on veut générer une suite de tests qui assure une non régression du système.
+    Il existe déjà des outils de génération de tests tel que \textit{Pex} et \textit{Sage}, deux systèmes basés sur du \textit{"fuzzing"} sur boite blanche. Le travail qui suit est un état de l'art des techniques existantes et une proposition de théorie/prototype basé sur les algorithmes d'optimisation sous contrainte et les solveurs SMT.\\
+    L'objectif est de proposer une méthode de génération des tests système, sans spécification. C'est à dire qu'on veut générer une suite de tests qui assure une non régression du système.\\
+    On se penche sur la faisabilité d'un pré-traitement du code permettant d'identifier les chemins d'éxécution non définis afin de limiter au maximum l'utilisation du "fuzzing" ou tout autre algorythme de recherche à tâton.
     \\[2mm]
-    {\bf Mots-cl\'es : } \keyWords
+    %{\bf Mots-cl\'es : } \keyWords
 }
 
 \def\Abstract{
-The complexity of software systems have considerably increased in the past decades and both the need and the difficulty of setting up correct test suits become more and more obvious.
+The complexity of software systems have considerably increased in the past decades, along with the means we muse use to validate those software.
     We are interested in the automation of test case generation for object oriented software. Our work is based on java code only, but principles are the same for every object oriented program.\\
-    Some tools already handle the test case generation, such as \textit{Pex} or \textit{Sage}. In this paper, we establish a state of the art of test automation techniques and proposes a theory/prototype based on constraint optimisation algorithms and SMT solvers.\\
+    Some tools already handle the test case generation, such as \textit{Pex} or \textit{Sage}, two tools based on \textit{white box fuzzing}. In this paper, we establish a state of the art of test automation techniques and proposes a theory/prototype based on constraint optimisation algorithms and SMT solvers.\\
     The following work consists in setting up test suits at the system level, without specification. 
-In other words, we want to generate a test suits that ensures the non-regression of he system, without any human intervention.
+In other words, we want to generate a test suits that ensures the non-regression of he system.\\
+We work on the feasibility of code pre-treatment allowing a direct identification of undefined paths in order to limit any "fuzzing" or recursive algorithm.
     \\[2mm]
     {\bf Key-words : } \keyWords
 }
@@ -141,10 +143,10 @@ In other words, we want to generate a test suits that ensures the non-regression
 \renewcommand{\thesection}{\arabic{section}}
 
 \newtheorem{theorem}{Theorem}
-\newtheorem{lemma}{Lemme}
+\newtheorem{lemma}{Lemma:}
 
 \renewcommand{\thetheorem}{\empty{}}
-\renewcommand{\thelemma}{\empty{}} 
+\renewcommand{\thelemma}{\arabic{lemma}} 
 
 \newenvironment{proof}[1][Proof]{\begin{trivlist}
 \item[\hskip \labelsep {\bfseries #1}]}{\end{trivlist}}
@@ -155,6 +157,8 @@ In other words, we want to generate a test suits that ensures the non-regression
 \newenvironment{remark}[1][Rq:]{\begin{trivlist}
 \item[\hskip \labelsep {\bfseries #1}]}{\end{trivlist}}
 \newenvironment{rappel}[1][rappel:]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}]}{\end{trivlist}}
+\newenvironment{NB}[1][NB:]{\begin{trivlist}
 \item[\hskip \labelsep {\bfseries #1}]}{\end{trivlist}}
 
 
@@ -182,7 +186,9 @@ This paper proposes a model for white box testing of object oriented software.
 
 \subsection*{Unit tests with JUnit}
 \addcontentsline{toc}{subsection}{Unit tests with JUnit}
-Les tests unitaires ont pour but de prouver la validité d'un objet. Par exemple, on souhaite parcourir la totalité du code en lançant le programme avec des valeurs clef choisies par le programmeur chargé des tests.
+Les tests unitaires ont pour but de prouver la validité d'un objet. Par exemple, on souhaite parcourir la totalité du code en lançant le programme avec des valeurs clef choisies par le programmeur chargé des tests.\\
+In a nutshell, apply the process $f$ to an input set $A$ must return $B$:\\
+$ A \xrightarrow{f} B $
 
 \subsection*{Integration tests}
 \addcontentsline{toc}{subsection}{Integration tests}
@@ -220,11 +226,11 @@ A common theory for testing is based on \textit{labelled transition systems}.
 
 
 
-\chapter*{Idées et mise en œuvre}
-\addcontentsline{toc}{chapter}{Idées et mise en œuvre}
+\chapter*{Main ideas}
+\addcontentsline{toc}{chapter}{Main ideas}
 
-\subsection*{Model of the system}
-\addcontentsline{toc}{subsection}{Model of the system}
+\section*{Model of the system}
+\addcontentsline{toc}{section}{Model of the system}
 
 We are reasoning at the function level.\\
 Every function can be represented as a labelled transition system. The set of labels is $L\ =\ I \cup U \cup A \cup D$ where :\\
@@ -255,24 +261,37 @@ $ $\\
 $ $\\
 \newline
 
-NB: The set of decisions label is associated with a set of state $\{d0, d1, d2\}$. Every transition from those states is a decision label i.e. \textbf{a first order formula}. We can also notice that decision states are the only multiple output states, and for a state $d$ with $n$ labels associated (every label corresponding to a FO formula $\phi_i$, $i\in[0, n]$)\\
+\begin{NB}
+The set of decisions label is associated with a set of state $\{d0, d1, d2\}$. Every transition from those states is a decision label i.e. \textbf{a first order formula}. We can also notice that decision states are the only multiple output states, and for a state $d$ with $n$ labels associated (every label corresponding to a FO formula $\phi_i$, $i\in[0, n]$)\\
 \newline
-1) For a set of inputs, the system is deterministic:\\
+
+\begin{lemma}
+For a set of inputs, the system is deterministic:\\
 $\forall i, j \in [0, n], i \neq j \Rightarrow \neg (\phi_i \wedge \phi_j)$\\
-\newline
-2) every set of input lead to a computation:\\
+\end{lemma}
+
+\begin{lemma}
+Every set of input lead to a computation:\\
 $\forall i \in [0, n] $\\
 \[\displaystyle \neg (\bigvee_{\substack{j=0 \\ j \neq i}}^{n} \phi_j) \Rightarrow \phi_i \]
+\end{lemma}
+
+\end{NB}
 
 
-\subsection*{Generation of initial test data}
-\addcontentsline{toc}{subsection}{Generation of initial test data}
+\begin{remark}
+In our prototype, a decision node has two labels maximum. This is due to parsing issues of java code. Manage multiple decision node linked to each other is less complex than processing the code to obtain a single, node with multiple FO formulas.
+\end{remark}
+
+
+\section*{Generation of initial test data}
+\addcontentsline{toc}{section}{Generation of initial test data}
 
 
 
 
-\subsection*{extracting sets suits with our model}
-\addcontentsline{toc}{subsection}{extracting sets suits with our model}
+\section*{extracting sets suits with our model}
+\addcontentsline{toc}{section}{extracting sets suits with our model}
 
 \begin{itemize}
 \item[$->$] random testing
@@ -302,11 +321,12 @@ public int exemple(int arg1, int arg2){
 A cette fonction, on associera le graph suivant:\\
 
 
+\begin{center}
 \begin{figure}[h!]
    \caption{\label{étiquette} titre}
    \includegraphics[scale=0.3]{../graphviz/doubleStackGraph.png}
 \end{figure}
-%\newline
+\end{center}
 
 
 
@@ -344,27 +364,33 @@ $ $\\
 Non non, pas d'écueils, j'te jure ;-)\\
 
 
+%\begin{center}
+%\begin{figure}[h!]
 
-\begin{figure}[h!]
-   \caption{\label{étiquette} Exemple réel}
+   %\caption{\label{étiquette} Concreat exemple from our prototype}
+   \centerline{
    \includegraphics[scale=0.3]{../graphviz/realExemple.png}
-\end{figure}
-
-\chapter*{References}
+}
+%\end{figure}
+%\end{center}
+This figure was generated from our function interpreter, using \textit{grapgviz}.
+\newpage
+\section*{References}
 \addcontentsline{toc}{chapter}{References}
-\section*{BDD}
+$ $\\
+\newline
+\textbf{BDD}\\
 \addcontentsline{toc}{section}{BDD}
+\newline
 $[1.1]$ \textit{Testing by Contract
 - Combining Unit Testing and Design by Contract}\\
 Per Madsen (madsen@cs.auc.dk)
 Institute of Computer Science, Aalborg University
 Fredrik Bajers Vej 7, DK-9220 Aalborg, Denmark\\
 \newline
-
-
-
-\section*{Mutation testing}
+\textbf{Mutation testing}\\
 \addcontentsline{toc}{section}{Mutation testing}
+\newline
 $[2.1]$ \textit{Composants objets fiables :
 une approche pragmatique}\\
 Daniel Deveaux* - Régis Fleurquin* - Patrice Frison*
@@ -376,16 +402,17 @@ UBS - IUP de Tohannic - Rue Mainguy
 Université Rennes 1 - Campus de Beaulieu
 35042 RENNES\\
 \newline
-
-\section*{Automatisation}
-\addcontentsline{toc}{section}{Automatisation}
-
-$[3.1]$ Bertrand Meyer, Ilinca Ciupa, Andreas Leitner and Lisa (Ling) Liu, \textit{Automatic Testing of Object-Oriented Software}, in SOFSEM 2007\\
+\textbf{Automation}\\
+\addcontentsline{toc}{section}{Automation}
 \newline
-$[3.2]$ Hans-Gerhard Gross and Arjan Seesing, 
+$[3.1]$ \textit{Test Generation with Inputs, Outputs and Repetitive Quiescence}, Jan Tretmans - Tele-Informatics and Open Systems Group, Department of Computer Science - University of Twente.\\
+\newline
+$[3.2]$ Bertrand Meyer, Ilinca Ciupa, Andreas Leitner and Lisa (Ling) Liu, \textit{Automatic Testing of Object-Oriented Software}, in SOFSEM 2007\\
+\newline
+$[3.3]$ Hans-Gerhard Gross and Arjan Seesing, 
 \textit{A Genetic Programming Approach to Automated Test Generation for Object Oriented Software}, Report TUD-SERG-2006-017\\
 \newline
-$[3.3]$\textit{Higher-Order Test Generation} - 
+$[3.4]$\textit{Higher-Order Test Generation} - 
 Patrice Godefroid - 
 Microsoft Research\\
 \newline
