@@ -61,8 +61,8 @@
 
 % Titre du rapport
 \def\TitreRapport{
-    Automatic test generation\\
-    for OO programs
+    Automatic Test Generation\\
+    for Object Oriented software
 }
 
 % Pre'nom et nom dde l'auteur
@@ -87,28 +87,34 @@
 
 % mots clef
 \def\keyWords{
-    test generation, input data generation, LTS, ioco, efficient path exploration, SMT solvers.
+    test generation, input data generation, LTS, ioco, path exploration, SMT solvers.
+}
+
+\def\keyWordsFr{
+    génération de tests, génération de données initiales, LTS, ioco, exploration de chemins, solveurs SMT.
 }
 
 
 % Re'sume' en franc,ais avec mots-cle's
 \def\ResumeFrancais{
-La complexité des systèmes informatique devient de plus en plus importante, de même que les moyens qui doivent être mis en œuvre pour valider le bon fonctionnement des ces systèmes.
-    Nous nous intéressons ici à l'automatisation des de la génération des cas de tests pour les programmes orientés objets. Le travaille effectué concerne les programmes java, les principes exposés s'applique à tout programme orienté objet.\\
-    Il existe déjà des outils de génération de tests tel que \textit{Pex} et \textit{Sage}, deux systèmes basés sur du \textit{"fuzzing"} sur boite blanche. Le travail qui suit est un état de l'art des techniques existantes et une proposition de théorie/prototype basé sur les algorithmes d'optimisation sous contrainte et les solveurs SMT.\\
-    L'objectif est de proposer une méthode de génération des tests système, sans spécification. C'est à dire qu'on veut générer une suite de tests qui assure une non régression du système.\\
-    On se penche sur la faisabilité d'un pré-traitement du code permettant d'identifier les chemins d'éxécution non définis afin de limiter au maximum l'utilisation du "fuzzing" ou tout autre algorythme de recherche à tâton.
+La complexité des systèmes informatiques devient de plus en plus importante, de même que les moyens qui doivent être mis en œuvre pour valider le bon fonctionnement des ces systèmes.
+    Nous nous intéressons ici à l'automatisation de la génération des cas de tests pour les programmes orientés objets. Le travail effectué concerne les programmes java, mais les principes exposés s'appliquent à tout programme orienté objet.\\
+    Il existe déjà des outils de génération de tests tels que \textit{Pex} et \textit{Sage}, deux systèmes basés sur du \textit{"fuzzing"} sur boite blanche. Le travail qui suit est un état de l'art des techniques existantes et une proposition de théorie/prototype basé sur les algorithmes d'optimisation sous contraintes et les solveurs SMT.\\
+    L'objectif est de proposer une méthode de génération des tests système, sans spécification. C'est-à-dire que l'on veut générer une suite de tests qui assure une non régression du système.\\
+    On se penche sur la faisabilité d'un pré-traitement du code permettant d'identifier les chemins d'exécution non définis afin de limiter au maximum l'utilisation du "fuzzing" ou tout autre algorithme de recherche à tâton.\\
+    Dans un second temps, on cherche à déduire de ce modèle de données les spécifications de chaque composants (objets). On cherche aussi à montrer qu'il est possible d'appliquer la théorie \textbf{ioco} sans introduction de spécification, en raisonnant sur l'environnement de chaque objet.
     \\[2mm]
-    %{\bf Mots-cl\'es : } \keyWords
+    {\bf Mots-cl\'es : } \keyWordsFr
 }
 
 \def\Abstract{
-The complexity of software systems have considerably increased in the past decades, along with the means we muse use to validate those software.
-    We are interested in the automation of test case generation for object oriented software. Our work is based on java code only, but principles are the same for every object oriented program.\\
-    Some tools already handle the test case generation, such as \textit{Pex} or \textit{Sage}, two tools based on \textit{white box fuzzing}. In this paper, we establish a state of the art of test automation techniques and proposes a theory/prototype based on constraint optimisation algorithms and SMT solvers.\\
-    The following work consists in setting up test suits at the system level, without specification. 
-In other words, we want to generate a test suits that ensures the non-regression of he system.\\
-We work on the feasibility of code pre-treatment allowing a direct identification of undefined paths in order to limit any "fuzzing" or recursive algorithm.
+The complexity of software systems have considerably increased in the past decades, along with the means we must use to validate those software.
+    We focus on the automation of test case generation for object oriented software. Our work is based on java code only, but principles are the same for every object oriented program.\\
+    Some tools already handle the test case generation, such as \textit{Pex} or \textit{Sage}, two tools based on \textit{white box fuzzing}. In this paper, we establish a state of the art of test automation techniques and propose a theory/prototype based on constraint optimisation algorithms and SMT solvers.\\
+    The following work consists in setting up test suites at the system level, without specification. 
+In other words, we want to generate a test suite that ensures the non-regression of the system.\\
+We work on the feasibility of code pre-treatment allowing a direct identification of undefined paths in order to limit any "fuzzing" or recursive algorithm.\\
+In a second time, we try to deduce from our data structure the specifications for every components (Objects) of the system. We try to find a way to apply the \textbf{ioco} theory, with no introduced specifications, based on the environment of every object.
     \\[2mm]
     {\bf Key-words : } \keyWords
 }
@@ -218,7 +224,8 @@ Of course, a test suite should test every possible action of the system and thus
 
 \subsection*{Software systems as LTSs}
 \addcontentsline{toc}{subsection}{Software systems as LTSs}
-A common theory for testing is based on \textit{labelled transition systems}.
+A common theory for testing is based on \textit{labelled transition systems}, the states of the system are represented by nodes, and the actions produced by or applied on the system are represented by labelled transitions.\\
+
 \subsection*{Conformance testing}
 \addcontentsline{toc}{subsection}{Conformance testing}
 
