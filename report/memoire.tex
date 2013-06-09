@@ -141,7 +141,6 @@ In a second time, we try to deduce from our data structure the specifications fo
 \end{center}
 \Abstract\\[4mm]
 
-\newpage
 
 
 \tableofcontents
@@ -156,7 +155,7 @@ In a second time, we try to deduce from our data structure the specifications fo
 
 \newenvironment{proof}[1][Proof]{\begin{trivlist}
 \item[\hskip \labelsep {\bfseries #1}]}{\end{trivlist}}
-\newenvironment{definition}[1][Definition]{\begin{trivlist}
+\newenvironment{definition}[1][Definition:\\]{\begin{trivlist}
 \item[\hskip \labelsep {\bfseries #1}]}{\end{trivlist}}
 \newenvironment{example}[1][Example]{\begin{trivlist}
 \item[\hskip \labelsep {\bfseries #1}]}{\end{trivlist}}
@@ -211,20 +210,41 @@ Comme on peut s'en douter, les tests système permettent de contrôler le systè
 \section*{Mutation testing}
 \addcontentsline{toc}{section}{Mutation testing}
 Mutation testing is a method that measures the "quality" of a test suite.\\
-As detailed in $[2.1]$, the method consists in introducing small modification in the systeme (ex: switch a "+" into a "-") and run the test suite on the modified system, also called the mutant. If the test suite raises an failure, the mutant is "killed".\\
+As detailed in $[2.1]$, the method consists in introducing small modification in the system (ex: switch a "+" into a "-") and run the test suite on the modified system, also called the mutant. If the test suite raises an failure, the mutant is "killed".\\
 Of course, a test suite should test every possible action of the system and thus, should kill 100\% of mutants.
 
 \section*{Test automation}
 \addcontentsline{toc}{section}{Test automation}
 - IOCO théorie\\
 - ioLTS\\
-- FSM/EFSM (Extended Finit State Machin)\\
+- FSM/EFSM (Extended Finite State Machine)\\
 - MBT (Model-Based Testing)\\
 - SMT solvers (yices)\\
 
 \subsection*{Software systems as LTSs}
 \addcontentsline{toc}{subsection}{Software systems as LTSs}
 A common theory for testing is based on \textit{labelled transition systems}, the states of the system are represented by nodes, and the actions produced by or applied on the system are represented by labelled transitions.\\
+\newline
+\textbf{The ioco relation} (cf.$[3.1]$) :\\
+\newline
+
+\begin{definition}
+Let $p$ be a state in a transition system, and let $P$ be a set of states, then\\
+\newline
+$out(p)$ $=_{def}$ \{$x\in L_U \mid p \xrightarrow{x} \} \cup \{ \delta \mid \delta (p) \}$\\
+\newline
+$out(P)$ $=_{def}$ $ \bigcup$ \{$out(p) \mid p \in P \}$\\
+\end{definition}
+
+\begin{definition}
+\textbf{Straces($p$)} are the \textit{suspension traces} of the process $p$.\\
+\end{definition}
+
+Let $i \in IOTS(L_I, L_U)$, $s \in LTS(L_I \cup L_U)$, then:\\
+$i$ \textbf{ioco} $s$ $=_{def}$ $ \forall \sigma \in Straces(s): $ $out(i$ \textbf{after} $\sigma) $ $\subseteq$ $out(s$ \textbf{after} $\sigma) $\\
+
+
+
 
 \subsection*{Conformance testing}
 \addcontentsline{toc}{subsection}{Conformance testing}
