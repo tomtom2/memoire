@@ -1,0 +1,32 @@
+digraph Solver {
+    0 -> 1.1 [label="exemple"];
+    1.1 -> 2.1 [label="exemple"];
+    1.1 -> 2.2 [label="printEquationType"];
+    1.1 -> 2.3 [label="calcDelta"];
+    1.1 -> 2.4 [label="calcSecondSol"];
+    1.1 -> 2.5 [label="calcFirstSol"];
+    0 -> 1.2 [label="printEquationType"];
+    1.2 -> 2.6 [label="exemple"];
+    1.2 -> 2.7 [label="printEquationType"];
+    1.2 -> 2.8 [label="calcDelta"];
+    1.2 -> 2.9 [label="calcSecondSol"];
+    1.2 -> 2.10 [label="calcFirstSol"];
+    0 -> 1.3 [label="calcDelta"];
+    1.3 -> 2.11 [label="exemple"];
+    1.3 -> 2.12 [label="printEquationType"];
+    1.3 -> 2.13 [label="calcDelta"];
+    1.3 -> 2.14 [label="calcSecondSol"];
+    1.3 -> 2.15 [label="calcFirstSol"];
+    0 -> 1.4 [label="calcSecondSol"];
+    1.4 -> 2.16 [label="exemple"];
+    1.4 -> 2.17 [label="printEquationType"];
+    1.4 -> 2.18 [label="calcDelta"];
+    1.4 -> 2.19 [label="calcSecondSol"];
+    1.4 -> 2.20 [label="calcFirstSol"];
+    0 -> 1.5 [label="calcFirstSol"];
+    1.5 -> 2.21 [label="exemple"];
+    1.5 -> 2.22 [label="printEquationType"];
+    1.5 -> 2.23 [label="calcDelta"];
+    1.5 -> 2.24 [label="calcSecondSol"];
+    1.5 -> 2.25 [label="calcFirstSol"];
+}

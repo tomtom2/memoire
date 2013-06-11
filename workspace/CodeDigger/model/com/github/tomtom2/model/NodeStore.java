@@ -385,7 +385,7 @@ public class NodeStore {
 		for (Node node : nodes) {
 			if (node.hasChild()) {
 				String label = "";
-				String from = "\"" + node.getBody().replace("\"", "'") + " ["
+				String from = "\"" + node.getBody().replace("\"", "'")
 						+ "\"";
 				String to = "\"" + node.getChild().getBody().replace("\"", "'")
 						+ "\"";

@@ -10,7 +10,7 @@ public class ObjectModel {
 	
 	public ObjectModel(String name, String packageName){
 		this.name = name;
-		this.packageName = packageName;
+		this.packageName = packageName.replace("package ", "").replace(";", "").replace("\n", "").trim();
 	}
 
 	public ArrayList<Function> getFunctions() {

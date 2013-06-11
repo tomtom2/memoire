@@ -1,52 +1,63 @@
 package com.github.tomtom2.view;
 
+import java.awt.Component;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
+import java.awt.geom.AffineTransform;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
-public class ZoomablePanel extends JPanel implements MouseWheelListener {
+import org.apache.batik.swing.JSVGCanvas;
+import org.apache.batik.swing.JSVGScrollPane;
 
-	private ImageIcon icon;
-	
-	
-	public ZoomablePanel(ImageIcon icon){
-		this.icon = icon;
-		this.setSize(icon.getIconWidth(), icon.getIconHeight());
-		this.repaint(0, 0, getWidth(), getHeight());
+public class ZoomablePanel extends JPanel {
+
+	// private BufferedImage image;
+	private JSVGCanvas svgCanvas = new JSVGCanvas();
+	private double scale = 1.0;
+
+	public ZoomablePanel(String imagePath) {
+		
+		String url = new File(imagePath).toURI().toString();
+		svgCanvas.setURI(url);
+		svgCanvas.setAutoscrolls(true);
+		svgCanvas.setCursor(new Cursor(Cursor.MOVE_CURSOR));
+		svgCanvas.setAnimationLimitingFPS(5);
+		this.add(svgCanvas);
+
+		svgCanvas.setEnableImageZoomInteractor(true);
+		svgCanvas.setBounds(0, 0, this.getWidth(), this.getHeight());
+		svgCanvas.addMouseWheelListener(new MouseWheelListener() {
+
+			@Override
+			public void mouseWheelMoved(MouseWheelEvent arg0) {
+				int mod = arg0.getWheelRotation();
+				if(mod>0 && scale>0.1){ scale = scale - 0.1; }
+				if(mod<0){ scale = scale + 0.1; }
+				svgCanvas.setRenderingTransform(AffineTransform
+						.getScaleInstance(scale, scale));
+				repaint();
+			}
+		});
+		
+		this.setBounds(svgCanvas.getX(), svgCanvas.getY(), svgCanvas.getWidth(), svgCanvas.getHeight());
 	}
+
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
-	@Override
-	public void mouseWheelMoved(MouseWheelEvent arg0) {
-		System.out.println(arg0.getWheelRotation());
-		int rot = arg0.getWheelRotation();
-		
-		int newWidth = (int)(getWidth() - rot*0.1*getWidth());
-		int newHeight = (int)(getHeight() - rot*0.1*getHeight());
-		this.setSize(newWidth, newHeight);
-		this.getParent().setSize(newWidth, newHeight);
-		this.repaint();
-		this.getParent().repaint();
-	}
-	
-	public void paintComponent(Graphics g){
-		Dimension d = getSize();
-		g.drawImage(icon.getImage(), 0, 0, d.width, d.height, null);
+	public void setImage(String pathToImage) {
+		svgCanvas.setURI(pathToImage);
 	}
 
-	public ImageIcon getIcon() {
-		return icon;
-	}
-
-	public void setIcon(ImageIcon icon) {
-		this.icon = icon;
-	}
-	
 }
