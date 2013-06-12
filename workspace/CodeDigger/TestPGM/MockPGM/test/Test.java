@@ -1,4 +1,7 @@
-package com.github.tomtom2.model.visitor;
+package MockPGM.test;
+
+import MockPGM.BasicOperations;
+
 
 public class Test {
 
@@ -8,7 +11,7 @@ public class Test {
 		int val = 0;
 
 		if (a < arg1) {
-			val = arg1;
+			val = BasicOperations.toSquare(arg1);
 		}
 		if (val < arg2) {
 			val += arg2;

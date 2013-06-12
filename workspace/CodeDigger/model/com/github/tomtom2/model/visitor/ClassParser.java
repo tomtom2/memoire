@@ -47,7 +47,9 @@ public class ClassParser {
 		Visitor viz = new Visitor();
         cu.accept(viz);
         
-        ObjectModel model = new ObjectModel(cu.getClass().getName(), cu.getPackage().toString());
+        ObjectModel model = new ObjectModel(cu);
+        model.setName(viz.getName());
+        model.setComponents(viz.getImports());
         model.setFunctions(viz.getFunctions());
         
 		return model;

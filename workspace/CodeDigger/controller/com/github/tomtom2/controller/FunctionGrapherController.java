@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import com.github.tomtom2.model.Function;
 import com.github.tomtom2.model.ObjectModel;
+import com.github.tomtom2.model.datadependency.ObjectSet;
 import com.github.tomtom2.model.visitor.ClassParser;
 import com.github.tomtom2.services.ObjectModelObservable;
 import com.github.tomtom2.services.ObjectModelObserver;
@@ -12,17 +13,30 @@ import com.github.tomtom2.util.Dot;
 
 public class FunctionGrapherController implements ObjectModelObservable {
 
-	private ArrayList<ObjectModel> objects = new ArrayList<ObjectModel>();
+	//private ArrayList<ObjectModel> objects = new ArrayList<ObjectModel>();
+	private ObjectSet objectSet = new ObjectSet();
 	private ArrayList<ObjectModelObserver> observers = new ArrayList<ObjectModelObserver>();
 	
-	public void processJavaClass(String path){
-		ObjectModel model = ClassParser.parseFile(path);
-		objects.add(model);
+//	public void processJavaClass(String path){
+//		ObjectModel model = ClassParser.parseFile(path);
+//		//objects.add(model);
+//		objectSet.add(model);
+//	}
+	
+	public void resetObjectSet(){
+		objectSet = new ObjectSet();
+	}
+	
+	public void printDependencies(){
+		objectSet.printDependencyGraph();
 	}
 
 	@Override
 	public void update(String pathToParse) {
 		ObjectModel model = ClassParser.parseFile(pathToParse);
+		String name = new File(pathToParse).getName().toString().replace(".java", "");
+		model.setName(name);
+		objectSet.add(model);
 		File folder = new File(model.getPackageName());
 		folder.mkdir();
 		

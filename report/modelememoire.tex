@@ -1,0 +1,100 @@
+
+
+% Les packages utilise's ci-dessous le sont a` titre indicatif ;
+% vous pouvez les changer a` votre convenance.
+
+% Le type de document: article, rapport...
+\documentclass[a4paper]{report}
+
+% Mettre les diffe'rents packages et fonctions que l'on utilise
+%\usepackage[english]{babel}
+\usepackage[french]{babel}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphics,color}
+
+% Commenter l'une de ces deux lignes
+%\RequirePackage[applemac]{inputenc}
+\RequirePackage[latin1]{inputenc}
+
+\begin{document}
+
+
+%----------- A   C O M P L E T E R   P A R   L E S   A U T E U R S ------------
+
+
+% Titre du rapport
+\def\TitreRapport{
+    Titre du rapport \\
+    pouvant être sur plusieurs lignes \\
+    si n\'ecessaire
+}
+
+% Pre'nom et nom dde l'auteur
+\def\NomsAuteurs{
+    Pr\'enom Nom
+}
+
+% Date du rapport (dans la me^me langue que le titre)
+\def\DateRapport{
+    jour mois ann\'ee
+}
+
+% Nom des encadrants
+\def\Encadrants{
+    \textbf{Encadrant(s)} \\
+    mettre ici les noms des encadrants
+}
+% Nom du laboratoire
+\def\Labo{
+    mettre ici le nom  du laboratoire, par défaut le LIF
+}
+
+
+
+% Re'sume' en franc,ais avec mots-cle's
+\def\ResumeFrancais{
+    R\'esum\'e en fran\c{c}ais obligatoire.
+    \\[2mm]
+    {\bf Mots-cl\'es : } mot-cl\'es  obligatoires.
+}
+
+
+\thispagestyle{empty}
+\begin{center}
+\baselineskip=1.3\normalbaselineskip
+{\bf\Large \TitreRapport}\\[8mm]
+{\bf\large \NomsAuteurs}\\[1mm]
+{\Labo}\\[4mm]
+\Encadrants\\[10mm]
+
+{\bf R\'esum\'e}
+\end{center}
+
+\ResumeFrancais\\[4mm]
+
+\newpage
+
+%-------------------- T E X T E   D U   R A P P O R T -------------------------
+
+
+Ins\'erer ici le texte du rapport dans le format et la structure que
+vous voulez.
+
+
+N'oubliez pas de mettre \`a la fin du rapport la bibliographie.
+
+\bigskip
+
+Une fois que votre rapport est pr\^et, produisez-en une version
+pdf. Relisez-la avec attention. V\'erifiez qu'il n'y a pas de
+probl\`emes d'accentuation.
+
+
+
+\bigskip
+
+Merci d'avoir bien voulu suivre ces instructions.
+
+\end{document}
+

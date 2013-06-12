@@ -57,7 +57,7 @@ public class Index extends JFrame implements ObjectModelObserver {
 	 */
 	public Index() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(200, 600, 450, 300);
+		setBounds(200, 300, 450, 300);
 
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
@@ -72,7 +72,7 @@ public class Index extends JFrame implements ObjectModelObserver {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				final JFileChooser fc = new JFileChooser();
+				final JFileChooser fc = new JFileChooser(".");
 				fc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
 				int returnVal = fc.showOpenDialog(null);
 
@@ -95,6 +95,17 @@ public class Index extends JFrame implements ObjectModelObserver {
 
 		JMenuItem mntmDelete = new JMenuItem("Delete");
 		menuBar.add(mntmDelete);
+		
+		JMenuItem mntmMakedep = new JMenuItem("MakeDep");
+		menuBar.add(mntmMakedep);
+		mntmMakedep.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				controller.printDependencies();
+			}
+			
+		});
 		mntmDelete.addActionListener(new ActionListener() {
 
 			@Override

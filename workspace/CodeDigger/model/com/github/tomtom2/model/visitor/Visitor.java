@@ -5,8 +5,13 @@ import java.util.ArrayList;
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTParser;
 import org.eclipse.jdt.core.dom.ASTVisitor;
+import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
 import org.eclipse.jdt.core.dom.CompilationUnit;
+import org.eclipse.jdt.core.dom.ImportDeclaration;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
+import org.eclipse.jdt.core.dom.SimpleName;
+import org.eclipse.jdt.core.dom.CompilationUnit;
+//import org.eclipse.jdt.core.dom;
 
 import com.github.tomtom2.model.Function;
 import com.github.tomtom2.model.NodeStore;
@@ -14,8 +19,16 @@ import com.github.tomtom2.model.NodeStore;
 public class Visitor extends ASTVisitor {
 
 	private ArrayList<Function> functions = new ArrayList<Function>();
+	private String name = "";
+	private ArrayList<String> imports = new ArrayList<String>();
     
-
+	
+	public boolean visit(ImportDeclaration importDeclaration) {
+		imports.add(importDeclaration.getName().toString());
+		System.out.println("import : "+importDeclaration.getName().toString());
+		return true;
+	}
+	
 	public boolean visit(MethodDeclaration node) {
 		System.out.println("visiting "+node.getName());
 		ASTParser parser = ASTParser.newParser(AST.JLS4);
@@ -39,6 +52,26 @@ public class Visitor extends ASTVisitor {
 	
 	public ArrayList<Function> getFunctions() {
 		return functions;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public ArrayList<String> getImports() {
+		return imports;
+	}
+
+	public void setImports(ArrayList<String> imports) {
+		this.imports = imports;
+	}
+
+	public void setFunctions(ArrayList<Function> functions) {
+		this.functions = functions;
 	}
 
 }
