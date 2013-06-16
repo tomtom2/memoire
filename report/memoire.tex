@@ -166,18 +166,24 @@ In a second time, we try to deduce from our data structure the specifications fo
 \newenvironment{NB}[1][NB:]{\begin{trivlist}
 \item[\hskip \labelsep {\bfseries #1}]}{\end{trivlist}}
 
+%custom negation of \xrightarrow for tau
+\newcommand{\shortnegbigspace}{\! \! \! \! \! \! \!}
+\newcommand{\nxrightarrowTau}{$\quad$\raisebox{\depth}{$\scriptscriptstyle
+    /$}$\displaystyle \shortnegbigspace \xrightarrow{\tau}\:$}
+\newcommand{\nxrightarrowA}{$\quad$\raisebox{\depth}{$\scriptscriptstyle
+    /$}$\displaystyle \shortnegbigspace \xrightarrow{a}\:$}
+\newcommand{\nxrightarrowX}{$\quad$\raisebox{\depth}{$\scriptscriptstyle
+    /$}$\displaystyle \shortnegbigspace \xrightarrow{x}\:$}
+
 
 \chapter*{Introduction}
 \addcontentsline{toc}{chapter}{Introduction}
-The complexity of software systems have considerably increased in the past decades and both the need and the difficulty of setting up correct test suits become more and more obvious.
+Testing often represents more than 50\% of the total costs in software development. The current methodologies, such as \textit{test driven development}, recommend the development of tests as early as possible in the development process. Those techniques have been proved to produce test suits with considerable reduction of the costs, but cannot ensure that the program under test can be trusted in any way ...TODO\\
+Tests can be build with different objectives: prove that a peace of software is compatible to a given specification, detect bugs, ensure a non-regression of the code during its evolution.\\
 \newline
 \textbf{Contribution :}\\
-This paper proposes a model for white box testing of object oriented software.
+This paper proposes a model for white box testing of object oriented software. We try to built a data structure representing an object oriented software, from which we can efficiently produce a test suite for one or more of its components. The main idea is ...TODO
 
-
-
-%\chapter*{Plate-forme cible}
-%\addcontentsline{toc}{chapter}{Plate-forme cible}
 
 
 
@@ -192,8 +198,9 @@ This paper proposes a model for white box testing of object oriented software.
 \subsection*{Unit tests with JUnit}
 \addcontentsline{toc}{subsection}{Unit tests with JUnit}
 Les tests unitaires ont pour but de prouver la validité d'un objet. Par exemple, on souhaite parcourir la totalité du code en lançant le programme avec des valeurs clef choisies par le programmeur chargé des tests.\\
-In a nutshell, apply the process $f$ to an input set $A$ must return $B$:\\
-$ A \xrightarrow{f} B $
+In a nutshell, apply the process $p$ to an input set $A$ must produce $B$:\\
+$ A \xrightarrow{p} B $\\
+
 
 \subsection*{Integration tests}
 \addcontentsline{toc}{subsection}{Integration tests}
@@ -238,6 +245,20 @@ $out(P)$ $=_{def}$ $ \bigcup$ \{$out(p) \mid p \in P \}$\\
 
 \begin{definition}
 Straces($p$) are the \textit{suspension traces} of the process $p$.\\
+\end{definition}
+
+\begin{definition}
+The operator $ \rceil \vert $ : $LTS(L_{\theta} \times LTS(L)$ $\rightarrow $ $ LTS(L_{\theta}) $ is defined by the following inference rules:\\
+
+\begin{tabular}{lll}
+   $u \xrightarrow{\tau} u'$ & $\vdash$ & $u \rceil \vert p \xrightarrow{\tau} u' \rceil \vert p$ \\
+   $p \xrightarrow{\tau} p'$ & $\vdash$ & $u \rceil \vert p \xrightarrow{\tau} u' \rceil \vert p$ \\
+   $u \xrightarrow{a} u'$, $p \xrightarrow{a} p'$, $a\in L$ & $\vdash$ & $u \rceil \vert p \xrightarrow{a} u' \rceil \vert p$ \\
+   $u \xrightarrow{\theta} u'$, $\neg u \xrightarrow{\tau}$, $\neg p \xrightarrow{\tau}$, $\forall a \in L :$ $\neg u \xrightarrow{a} \vee \neg p \xrightarrow{a}$ & $\vdash$ & $u \rceil \vert p \xrightarrow{\theta} u' \rceil \vert p$ \\
+
+
+\end{tabular}
+
 \end{definition}
 
 Let $i \in IOTS(L_I, L_U)$, $s \in LTS(L_I \cup L_U)$, then:\\

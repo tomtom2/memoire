@@ -152,7 +152,7 @@ public class Index extends JFrame implements ObjectModelObserver {
 								listOfFiles[i].getAbsolutePath());
 						JScrollPane scrollPane = new JScrollPane();
 						scrollPane.setViewportView(panel);
-						tabbedPane.add(listOfFiles[i].getName(),
+						tabbedPane.add(listOfFiles[i].getName().replace("."+imageType, ""),
 								scrollPane);
 					}
 				}
