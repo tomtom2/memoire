@@ -72,7 +72,7 @@
 
 % Date du rapport (dans la me^me langue que le titre)
 \def\DateRapport{
-    June $6^{th}$, 2013
+    June $16^{th}$, 2013
 }
 
 % Nom des encadrants
@@ -230,10 +230,21 @@ Of course, a test suite should test every possible action of the system and thus
 
 \subsection*{Software systems as LTSs}
 \addcontentsline{toc}{subsection}{Software systems as LTSs}
-A common theory for testing is based on \textit{labelled transition systems}, the states of the system are represented by nodes, and the actions produced by or applied on the system are represented by labelled transitions.\\
+A common theory for testing is based on \textit{labelled transition systems}, the states of the system are represented by nodes, and the actions produced by or applied on the system are represented by labelled transitions.\\ An LTS can be formalized as follow:\\
+TODO ...\\
+p = (S, $s_0$, L, $\delta$)\\
+with 
+\begin{itemize}
+\item S : a set of states
+\item $s_0$ : the initial state
+\item L : a set of action labels
+\item $\delta \in S \times L \times S$ : a transition relation
+\end{itemize}
+$ $\\
 \newline
 \textbf{The ioco relation} (cf.$[3.1]$) :\\
 \newline
+The \textbf{ioco} relation, or \textbf{ioco} theory, is a relation that check the conformance of an implementation, modelled by an $ioTS$, to a specification, modelled by an $LTS$. The following definition and notations are a brief presentation of the \textbf{ioco} theory, containing the minimum information we need to write: $i$ \textbf{ioco} $s$\\
 
 \begin{definition}
 Let $p$ be a state in a transition system, and let $P$ be a set of states, then\\
@@ -334,12 +345,16 @@ In our prototype, a decision node has two labels maximum. This is due to parsing
 
 \section*{Generation of initial test data}
 \addcontentsline{toc}{section}{Generation of initial test data}
+At first, we assume that our system is only composed of well defined functions. In other words, for a given set of inputs, the system is deterministic.\\
+A trace is accessible if we compute inputs from a specific domain. The program itself is a classification tool, and we need to test every class of inputs to ensure the correctness of the system.\\
+
+\section*{Handle undefined functions}
+\addcontentsline{toc}{section}{Handle undefined functions}
+SMT... TODO\\
 
 
-
-
-\section*{extracting sets suits with our model}
-\addcontentsline{toc}{section}{extracting sets suits with our model}
+\section*{extracting test suites with our model}
+\addcontentsline{toc}{section}{extracting test suites with our model}
 
 \begin{itemize}
 \item[$->$] random testing
@@ -349,7 +364,7 @@ In our prototype, a decision node has two labels maximum. This is due to parsing
 \item[$->$] Bashir sliding
 \end{itemize}
 
-
+Our analysis is based on the java source code. TODO\\
 On raisonne sur le code source, et plus particulièrement sur des blocs de code. A partir de ce point, nous appellerons fonction élémentaire une partie de code dont la séquence d'exécution ne dépend d'aucune variable. Plus précisément, un code java qui ne contient pas d'accolades.\\
 \newline
 Par exemple, le code java suivant contient deux actions elementaires: val=arg1 et val+=arg2\\
@@ -464,6 +479,10 @@ $[3.4]$\textit{Higher-Order Test Generation} -
 Patrice Godefroid - 
 Microsoft Research\\
 \newline
+\textbf{SMT Solvers}\\
+\addcontentsline{toc}{section}{SMT Solvers}
+\newline
+$[4.1]$ TODO
 
 
 \end{document}
