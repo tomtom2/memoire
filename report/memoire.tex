@@ -259,7 +259,7 @@ Straces($p$) are the \textit{suspension traces} of the process $p$.\\
 \end{definition}
 
 \begin{definition}
-The operator $ \rceil \vert $ : $LTS(L_{\theta} \times LTS(L)$ $\rightarrow $ $ LTS(L_{\theta}) $ is defined by the following inference rules:\\
+The operator $ \rceil \vert $ : $LTS(L_{\theta}) \times LTS(L)$ $\rightarrow $ $ LTS(L_{\theta}) $ is defined by the following inference rules:\\
 
 \begin{tabular}{lll}
    $u \xrightarrow{\tau} u'$ & $\vdash$ & $u \rceil \vert p \xrightarrow{\tau} u' \rceil \vert p$ \\
@@ -303,8 +303,7 @@ And the set of states is $S\ = C \cup D$\\
 where $C$ is the set of common states and $D$ is the set of states preceding a \textit{decision}.
 We call \textit{parent} of a label $f \in F$ a node $d \in D$ such as:\\
 \[
-\exists s \in S, 
-d \xrightarrow{f} s\\
+\exists s \in S,\ s \in out(d)\\
 \]
 $ $\\
 \newline
@@ -345,12 +344,21 @@ In our prototype, a decision node has two labels maximum. This is due to parsing
 
 \section*{Generation of initial test data}
 \addcontentsline{toc}{section}{Generation of initial test data}
-At first, we assume that our system is only composed of well defined functions. In other words, for a given set of inputs, the system is deterministic.\\
+At first, we assume that our system is only composed of well defined functions. In other words, for a given set of inputs, the system is deterministic and the states of each variables can be traced.\\
+
 A trace is accessible if we compute inputs from a specific domain. The program itself is a classification tool, and we need to test every class of inputs to ensure the correctness of the system.\\
 
 \section*{Handle undefined functions}
 \addcontentsline{toc}{section}{Handle undefined functions}
+We call \textit{undefined function} a function for which we cannot access the source code. Those functions can be seen as black boxes, with no link between the inputs and the outputs.\\
+Let $I$ be a set of input given to $f$, an undefined, but surjective, function.\\
+Let $O$ be the set of output returned from $f$ for $I$.\\
+$\forall x \in I$\\
 SMT... TODO\\
+
+\section*{Reducing average complexity by slicing}
+\addcontentsline{toc}{section}{Reducing average complexity by slicing}
+In some cases, the complexity can be reduced by isolating, or \textit{slicing}, parts of program that depends on a reduced set of data. For instance ...TODO\\
 
 
 \section*{extracting test suites with our model}
@@ -385,10 +393,10 @@ A cette fonction, on associera le graph suivant:\\
 
 
 \begin{center}
-\begin{figure}[h!]
-   \caption{\label{étiquette} titre}
+%\begin{figure}[h!]
+   %\caption{\label{étiquette} titre}
    \includegraphics[scale=0.3]{../graphviz/doubleStackGraph.png}
-\end{figure}
+%\end{figure}
 \end{center}
 
 
@@ -426,7 +434,10 @@ $ $\\
 \newline
 Non non, pas d'écueils, j'te jure ;-)\\
 
-
+\chapter*{Forthcoming work}
+\addcontentsline{toc}{chapter}{Forthcoming work}
+\section*{TODO}
+integration level
 %\begin{center}
 %\begin{figure}[h!]
 
