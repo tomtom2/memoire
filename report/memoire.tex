@@ -178,11 +178,11 @@ In a second time, we try to deduce from our data structure the specifications fo
 
 \chapter*{Introduction}
 \addcontentsline{toc}{chapter}{Introduction}
-Testing often represents more than 50\% of the total costs in software development. The current methodologies, such as \textit{test driven development}, recommend the development of tests as early as possible in the development process. Those techniques have been proved to produce test suits with considerable reduction of the costs, but cannot ensure that the program under test can be trusted in any way ...TODO\\
-Tests can be build with different objectives: prove that a peace of software is compatible to a given specification, detect bugs, ensure a non-regression of the code during its evolution.\\
+Testing often represents more than 50\% of the total costs in software development. The current methodologies, such as \textit{test driven development}, recommend the development of tests as early as possible in the development process. Those techniques have been proved to produce test suits with considerable reduction of the costs, but cannot ensure that the program under test can be trusted in any way ...{\color{red} \textbf{TODO}}\\
+Tests can be build with different objectives: prove that a piece of software is compatible to a given specification, detect bugs, ensure a non-regression of the code during its evolution.\\
 \newline
 \textbf{Contribution :}\\
-This paper proposes a model for white box testing of object oriented software. We try to built a data structure representing an object oriented software, from which we can efficiently produce a test suite for one or more of its components. The main idea is ...TODO
+This paper proposes a model for white box testing of object oriented software. We try to built a data structure representing an object oriented software, from which we can efficiently produce a test suite for one or more of its components. The main idea is ...{\color{red} \textbf{TODO}}\\
 
 
 
@@ -199,16 +199,21 @@ This paper proposes a model for white box testing of object oriented software. W
 \addcontentsline{toc}{subsection}{Unit tests with JUnit}
 Les tests unitaires ont pour but de prouver la validité d'un objet. Par exemple, on souhaite parcourir la totalité du code en lançant le programme avec des valeurs clef choisies par le programmeur chargé des tests.\\
 In a nutshell, apply the process $p$ to an input set $A$ must produce $B$:\\
-$ A \xrightarrow{p} B $\\
-
+\[A \xrightarrow{p} B\]
+A test case can be easily set up by a human, but generate it automatically raises three issues:
+\begin{itemize}
+\item find a correct input
+\item determine which sets of process to run
+\item predict the output
+\end{itemize}
 
 \subsection*{Integration tests}
 \addcontentsline{toc}{subsection}{Integration tests}
-Les tests d'intégration visent à valider la bonne interaction entre plusieurs composants du système.
+Les tests d'intégration visent à valider la bonne interaction entre plusieurs composants du système.{\color{red} \textbf{TODO}}\\
 
 \subsection*{System tests}
 \addcontentsline{toc}{subsection}{System tests}
-Comme on peut s'en douter, les tests système permettent de contrôler le système dans son ensemble.
+Comme on peut s'en douter, les tests système permettent de contrôler le système dans son ensemble.{\color{red} \textbf{TODO}}\\
 
 %\section*{Testing by contract}
 %\addcontentsline{toc}{section}{Testing by contract}
@@ -218,20 +223,37 @@ Comme on peut s'en douter, les tests système permettent de contrôler le systè
 \addcontentsline{toc}{section}{Mutation testing}
 Mutation testing is a method that measures the "quality" of a test suite.\\
 As detailed in $[2.1]$, the method consists in introducing small modification in the system (ex: switch a "+" into a "-") and run the test suite on the modified system, also called the mutant. If the test suite raises an failure, the mutant is "killed".\\
+\newline
+$ $\\
+\centerline{
+  \includegraphics[scale=0.5]{img/mutation.jpg}
+}
+$ $\\
+\newline
 Of course, a test suite should test every possible action of the system and thus, should kill 100\% of mutants.
 
 \section*{Test automation}
 \addcontentsline{toc}{section}{Test automation}
+A reference in test automation is \textit{model based testing}.\\
+{\color{red} \textbf{TODO}}\\
+\newline
+$ $\\
+\centerline{
+  \includegraphics[scale=0.5]{img/modelBasedTesting.png}
+}
+$ $\\
+\newline
 - IOCO théorie\\
 - ioLTS\\
 - FSM/EFSM (Extended Finite State Machine)\\
 - MBT (Model-Based Testing)\\
 - SMT solvers (yices)\\
+{\color{red} \textbf{TODO}}\\
 
 \subsection*{Software systems as LTSs}
 \addcontentsline{toc}{subsection}{Software systems as LTSs}
 A common theory for testing is based on \textit{labelled transition systems}, the states of the system are represented by nodes, and the actions produced by or applied on the system are represented by labelled transitions.\\ An LTS can be formalized as follow:\\
-TODO ...\\
+{\color{red} \textbf{TODO}} ...\\
 p = (S, $s_0$, L, $\delta$)\\
 with 
 \begin{itemize}
@@ -354,11 +376,11 @@ We call \textit{undefined function} a function for which we cannot access the so
 Let $I$ be a set of input given to $f$, an undefined, but surjective, function.\\
 Let $O$ be the set of output returned from $f$ for $I$.\\
 $\forall x \in I$\\
-SMT... TODO\\
+SMT... {\color{red} \textbf{TODO}}\\
 
 \section*{Reducing average complexity by slicing}
 \addcontentsline{toc}{section}{Reducing average complexity by slicing}
-In some cases, the complexity can be reduced by isolating, or \textit{slicing}, parts of program that depends on a reduced set of data. For instance ...TODO\\
+In some cases, the complexity can be reduced by isolating, or \textit{slicing}, parts of program that depends on a reduced set of data. For instance ...{\color{red} \textbf{TODO}}\\
 
 
 \section*{extracting test suites with our model}
@@ -372,7 +394,7 @@ In some cases, the complexity can be reduced by isolating, or \textit{slicing}, 
 \item[$->$] Bashir sliding
 \end{itemize}
 
-Our analysis is based on the java source code. TODO\\
+Our analysis is based on the java source code. {\color{red} \textbf{TODO}}\\
 On raisonne sur le code source, et plus particulièrement sur des blocs de code. A partir de ce point, nous appellerons fonction élémentaire une partie de code dont la séquence d'exécution ne dépend d'aucune variable. Plus précisément, un code java qui ne contient pas d'accolades.\\
 \newline
 Par exemple, le code java suivant contient deux actions elementaires: val=arg1 et val+=arg2\\
@@ -433,10 +455,11 @@ $ $\\
 --- vous prendrez du temps pour expliquer les possibles écueils de ces directions de recherche et comment vous envisagez de les contourner.\\
 \newline
 Non non, pas d'écueils, j'te jure ;-)\\
+{\color{red} \textbf{TODO: DELETE}}
 
 \chapter*{Forthcoming work}
 \addcontentsline{toc}{chapter}{Forthcoming work}
-\section*{TODO}
+\section*{{\color{red} \textbf{TODO}}}
 integration level
 %\begin{center}
 %\begin{figure}[h!]
@@ -490,10 +513,12 @@ $[3.4]$\textit{Higher-Order Test Generation} -
 Patrice Godefroid - 
 Microsoft Research\\
 \newline
-\textbf{SMT Solvers}\\
+\textbf{SMT Solvers and constraint satisfaction}\\
 \addcontentsline{toc}{section}{SMT Solvers}
 \newline
-$[4.1]$ TODO
+$[4.1]$ {\color{red} \textbf{TODO}}\\
+\newline
+$[4.2]$ \textit{choco}: an Open Source Java Constraint Programming Library - Ecole des Mines de Nantes\\
 
 
 \end{document}
