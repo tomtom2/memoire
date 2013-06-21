@@ -243,7 +243,6 @@ The main issue of this method is the time it consumes. A huge amount of mutant i
 \addcontentsline{toc}{section}{Test automation}
 A reference in test automation is \textit{model based testing}.\\
 The starting point of this technique is a \textit{model} of the desired behaviour of the \textit{implementation under test} (IUT). The implementation and its model are confronted to generate a test suite. Then the implementation is run under the generated test suite. If the implementation passes every tests, it implies that it is conform to the model.\\
-{\color{red} \textbf{TODO}}\\
 \newline
 $ $\\
 \centerline{
@@ -254,25 +253,51 @@ $ $\\
 Note that the implementation and the model must have the same abstraction level to allow a confrontation.\\
 It is, most of the time, convenient to represent a system as a \textit{labelled transition system} (LTS).\\
 \newline
-- IOCO théorie\\
-- ioLTS\\
-- FSM/EFSM (Extended Finite State Machine)\\
-- MBT (Model-Based Testing)\\
-- SMT solvers (yices)\\
-{\color{red} \textbf{TODO}}\\
 
 \subsection*{Software systems as LTSs}
 \addcontentsline{toc}{subsection}{Software systems as LTSs}
 A common theory for testing is based on \textit{labelled transition systems}, the states of the system are represented by nodes, and the actions produced by or applied on the system are represented by labelled transitions.\\ An LTS can be formalized as follow:\\
-{\color{red} \textbf{TODO}} ...\\
-p = (S, $s_0$, L, $\delta$)\\
+p = ($S$, $L$, $T$, $s_0$)\\
 with 
 \begin{itemize}
 \item S : a set of states
 \item $s_0$ : the initial state
 \item L : a set of action labels
-\item $\delta \in S \times L \times S$ : a transition relation
+\item $T \in S \times L \times S$ : a transition relation
 \end{itemize}
+$ $\\
+\newline
+We want to defined basic relation on the path of those systems:\\
+\begin{definition}
+Let $p$ be an $LTS$ defined above, with $q$, $q'$ $\in S$ and $\mu$, $\mu_i$ $\in L \cup \{\tau \}$:\\
+\begin{tabular}{lll}
+   $q \xrightarrow{\mu} q'$ & $\Leftrightarrow_{def}$ & $(q, \mu , q') \in T$ \\
+   $q \xrightarrow{\mu_1 ... \mu_n} q'$ & $\Leftrightarrow_{def}$ & $\exists q_0, ..., q_n : q=q_0 \xrightarrow{\mu_1} q_1 \xrightarrow{\mu_2} ... \xrightarrow{\mu_n} q_n = q'$ \\
+   $q \xrightarrow{\mu_1 ... \mu_n}$ & $\Leftrightarrow_{def}$ & $\exists q' : q \xrightarrow{\mu_1 ... \mu_n} q'$ \\
+\end{tabular}
+\end{definition}
+
+\begin{definition}
+Let $p$ be an $LTS$ defined above, with $q$, $q'$ $\in S$, $a, a_i \in L$, and $\sigma \in L^*$.\\
+\begin{tabular}{lll}
+   $q \xRightarrow{\epsilon} q'$ & $\Leftrightarrow_{def}$ & $q = q'$ or $ q \xrightarrow{\tau ... \tau} q'$ \\
+   $q \xRightarrow{a} q'$ & $\Leftrightarrow_{def}$ & $\exists q_1, q_2 :$ $q \xRightarrow{\epsilon} q_1 \xrightarrow{a} q_2 \xRightarrow{\epsilon} q'$ \\
+   $q \xRightarrow{a_1 ... a_n} q'$ & $\Leftrightarrow_{def}$ & $\exists q_0, ..., q_n : q=q_0 \xRightarrow{a_1} q_1 \xRightarrow{a_2} ... \xRightarrow{a_n} q_n = q'$ \\
+   $q \xRightarrow{\sigma}$ & $\Leftrightarrow_{def}$ & $\exists q' : q \xRightarrow{\sigma} q'$ \\
+\end{tabular}
+\end{definition}
+
+\begin{definition}
+We also define the parallel synchronization of two LTSs by the operator $ \| $ : $LTS(L) \times LTS(L)$ $\rightarrow $ $ LTS(L) $, which is defined by the following inference rules:\\
+
+\begin{tabular}{lll}
+   $u \xrightarrow{a} u'$, $ p \not \xrightarrow{a} p'$, $a\in L$ & $\vdash$ & $u \| p \xrightarrow{a} u' \| p$ \\
+   $u \not \xrightarrow{a} u'$, $p \xrightarrow{a} p'$, $a\in L$ & $\vdash$ & $u \| p \xrightarrow{a} u \| p'$ \\
+   $u \xrightarrow{a} u'$, $p \xrightarrow{a} p'$, $a\in L$ & $\vdash$ & $u \| p \xrightarrow{a} u' \| p'$ \\
+\end{tabular}
+\end{definition}
+The previous definitions are the base of $LTS$ logic, and help reasoning on labelled path.\\
+The parallel synchronization is an operation used for test runs, at the end of the testing process.\\
 $ $\\
 \newline
 \textbf{The ioco relation} (cf.$[3.1]$) :\\
@@ -281,6 +306,12 @@ The \textbf{ioco} relation, or \textbf{ioco} theory, is a relation that check th
 
 \begin{definition}
 Let $p$ be a state in a transition system, and let $P$ be a set of states, then\\
+\newline
+$init(p)$ $=_{def}$ $\{ \mu \in L \cup \{ \tau \} \mid p \xrightarrow{\mu} \}$\\
+\newline
+$traces(p)$ $=_{def}$ $\{ \sigma \in L^* \mid p \xRightarrow{\sigma} \}$\\
+\newline
+$p$ \textbf{after} $\sigma$ $=_{def}$ $\{ p' \mid p \xRightarrow{\sigma} p' \}$\\
 \newline
 $out(p)$ $=_{def}$ \{$x\in L_U \mid p \xrightarrow{x} \} \cup \{ \delta \mid \delta (p) \}$\\
 \newline
@@ -298,29 +329,15 @@ Straces($p$) are the \textit{suspension traces} of the process $p$
 \end{definition}
 
 \begin{definition}
-The operator $ \rceil \vert $ : $LTS(L_{\theta}) \times LTS(L)$ $\rightarrow $ $ LTS(L_{\theta}) $ is defined by the following inference rules:\\
-
-\begin{tabular}{lll}
-   $u \xrightarrow{\tau} u'$ & $\vdash$ & $u \rceil \vert p \xrightarrow{\tau} u' \rceil \vert p$ \\
-   $p \xrightarrow{\tau} p'$ & $\vdash$ & $u \rceil \vert p \xrightarrow{\tau} u' \rceil \vert p$ \\
-   $u \xrightarrow{a} u'$, $p \xrightarrow{a} p'$, $a\in L$ & $\vdash$ & $u \rceil \vert p \xrightarrow{a} u' \rceil \vert p$ \\
-   $u \xrightarrow{\theta} u'$, $\neg u \xrightarrow{\tau}$, $\neg p \xrightarrow{\tau}$, $\forall a \in L :$ $\neg u \xrightarrow{a} \vee \neg p \xrightarrow{a}$ & $\vdash$ & $u \rceil \vert p \xrightarrow{\theta} u' \rceil \vert p$ \\
-
-
-\end{tabular}
-
-\end{definition}
-
 Let $i \in IOTS(L_I, L_U)$, $s \in LTS(L_I \cup L_U)$, then:\\
 $i$ \textbf{ioco} $s$ $=_{def}$ $ \forall \sigma \in Straces(s): $ $out(i$ \textbf{after} $\sigma) $ $\subseteq$ $out(s$ \textbf{after} $\sigma) $\\
-
+\end{definition}
 
 
 
 \subsection*{Conformance testing}
 \addcontentsline{toc}{subsection}{Conformance testing}
-{\color{red} \textbf{TODO}}\\
-
+At this point, we have a specification, an implementation modelled by an $LTS$ and a theory of conformance. We only need an algorithm capable of abstracting the specification into a set of test cases to decide weather our system is conform to its specification or not.\\
 \begin{definition}{$ $\\}
 (1) A \textit{test case} $t$ is a 5-tuple $\langle S, L, T, v, s_0 \rangle$, such that $\langle S, L, T, s_0 \rangle$ is a deterministic labelled transition system with finite behaviour, and v : $S \rightarrow \{\textbf{fail}, \textbf{pass} \}$ is a \textit{verdict function}.
 The class of test cases over actions in L is denoted by $LTS_t (L)$. Definitions applicable to $LTS(L)$ are extended to $LTS_t (L)$ by defining them over the underlying labelled transition system.\\
@@ -328,11 +345,17 @@ The class of test cases over actions in L is denoted by $LTS_t (L)$. Definitions
 (2) A \textit{test suite} $T$ is a set of test cases: $T$ $\in$ $P(LTS_t (L))$, where $p(LTS_t (L))$ is the powerset of $LTS_t (L)$, i.e., the set of all possible subsets of $LTS_t (L)$.
 \end{definition}
 
+From now, we assume that we have an algorithm capable of generating test cases based on a specification, and a theory, or \textit{implementation}. Such algorithm can be represented by the following function:
+\[ gen_{\textbf{imp}}: LTS(L) \rightarrow P(LTS_t(L)) \]
+For instance, if we confront a specification $s \in LTS(L)$ to the \textit{ioco} theory, we obtain a test suite $T = gen_{\textbf{ioco}}(s)$\\
+\newline
+As detailed in $[3.5]$, it is now easy to prove that an implementation $i$ passes a test case $t$:\\
+$i$ \textbf{passes} \textit{t} $=_{def}$ $\forall \sigma \in L^* : t \| i$ \textbf{after} $\sigma$ \textbf{deadlocks} \textit{implies} $v$(t \textbf{after} $\sigma$) = \textbf{pass}\\
 
 
 \chapter*{Main ideas}
 \addcontentsline{toc}{chapter}{Main ideas}
-
+We want to apply a \textbf{ioco}-like theory to white-box testing.
 \section*{Model of the system}
 \addcontentsline{toc}{section}{Model of the system}
 
@@ -348,7 +371,7 @@ And the set of states is $S\ = C \cup D$\\
 where $C$ is the set of common states and $D$ is the set of states preceding a \textit{decision}.
 We call \textit{parent} of a label $f \in F$ a node $d \in D$ such as:\\
 \[
-\exists s \in S,\ s \in out(d)\\
+\exists s \in S,\ s \in init(d)\\
 \]
 $ $\\
 \newline
@@ -449,41 +472,15 @@ A cette fonction, on associera le graph suivant:\\
 En suivant notre modélisation, on obtient deux actions élémentaires:
 
 
-\chapter*{Réalisations}
-\addcontentsline{toc}{chapter}{Réalisations}
-
-
-
---- vous décrirez la problématique de recherche qui vous intéresse\\
-\newline
-L'automatisation à 100\% des tests pour les programmes orienté objets. Pour un tel niveau d'automatisation, on ne peut bien sûr pas espérer obtenir une spécification de l'utilisateur. Nous traitenons donc les tests de non régression pricipalement. Notre contribution est la suivante: nous ne nous limitons pas aux tests unitaires, mais on veut tester le bon fonctionnement d'un systeme entier. On veut donc mettre au point des tests d'intégration et systeme efficaces.\\
-\newline
-\newline
---- vous vous décrirez l'état de l'art\\
-\newline
-On se base sur la théorie \textbf{ioco}.\\
-\newline
-\newline
---- vous esquisserez les résultats que vous avez obtenus, ainsi que  les directions de recherche qu'il vous reste à explorer\\
-\newline
-\begin{itemize}
-\item[$ 1) $] Pour un système simple, le problème est déjà résolu.
-\item[$ 2) $] Pour un systeme complexe, on cherche à isoler des sous-systeme et à définir des relation de dépendence du type \textit{master/slave} entre ceux-ci.
-\item[$ 3) $] On fait l'hypothèse que le code d'un sous-système est aussi la spécification attendu.
-\item[$ 4) $] On lance des tests de conformance de la théorie \textbf{ioco} basé sur les spécification de chaques systèmes et leur relationde dépendence.
-\end{itemize}
-$ $\\
-\newline
-\newline
---- vous prendrez du temps pour expliquer les possibles écueils de ces directions de recherche et comment vous envisagez de les contourner.\\
-\newline
-Non non, pas d'écueils, j'te jure ;-)\\
-{\color{red} \textbf{TODO: DELETE}}
 
 \chapter*{Forthcoming work}
 \addcontentsline{toc}{chapter}{Forthcoming work}
+
+In its current state, our work doesn't handle recursive or asynchronous systems.
 \section*{{\color{red} \textbf{TODO}}}
 integration level
+
+
 %\begin{center}
 %\begin{figure}[h!]
 
@@ -535,6 +532,10 @@ $[3.3]$ Hans-Gerhard Gross and Arjan Seesing,
 $[3.4]$\textit{Higher-Order Test Generation} - 
 Patrice Godefroid - 
 Microsoft Research\\
+\newline
+$[3.5]$\textit{Conformance testing with labelled transition systems: Implementationrelations and test generation} - 
+Jan Tretmans - 
+Tele-Informatics and Open Systems Group, Department of Computer Science - University of Twente.\\
 \newline
 \textbf{SMT Solvers and constraint satisfaction}\\
 \addcontentsline{toc}{section}{SMT Solvers}
