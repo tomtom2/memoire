@@ -182,11 +182,11 @@ In a second time, we try to deduce from our data structure the specifications fo
 
 \chapter*{Introduction}
 \addcontentsline{toc}{chapter}{Introduction}
-Testing often represents more than 50\% of the total costs in software development. The current methodologies, such as \textit{test driven development}, recommend the development of tests as early as possible in the development process. Those techniques have been proved to produce test suits with considerable reduction of the costs, but cannot ensure that the program under test can be trusted in any way ...{\color{red} \textbf{TODO}}\\
+Testing often represents almost 50\% of the total costs in software development. The current methodologies, such as \textit{test driven development}, recommend the development of tests as early as possible in the development process. Those techniques have been proved to produce test suits with considerable reduction of the costs, but cannot ensure that the program under test can be trusted in any way. Moreover, testing is a fastidious and repetitive part of the development process.
 Tests can be build with different objectives: prove that a piece of software is compatible to a given specification, detect bugs, ensure a non-regression of the code during its evolution.\\
 \newline
 \textbf{Contribution :}\\
-This paper proposes a model for white box testing of object oriented software. We try to built a data structure representing an object oriented software, from which we can efficiently produce a test suite for one or more of its components. The main idea is ...{\color{red} \textbf{TODO}}\\
+This paper proposes a model for white box testing of object oriented software. We try to built a data structure representing an object oriented software, from which we can efficiently produce a test suite for one or more of its components. The main idea is to use the environment of every object as a specification.\\
 
 
 
@@ -213,13 +213,9 @@ A test case can be easily set up by a human, but generate it automatically raise
 The quality of a test suite is measured in term of coverage:\\
 a set of unit test should cover 100\% of the code. It means the programmer in charge of setting up the tests must choose input values that will lead to every possible computation of the \textit{system under test} (SUT).\\
 
-\subsection*{Integration tests}
-\addcontentsline{toc}{subsection}{Integration tests}
-Les tests d'intégration visent à valider la bonne interaction entre plusieurs composants du système.{\color{red} \textbf{TODO}}\\
-
-\subsection*{System tests}
-\addcontentsline{toc}{subsection}{System tests}
-Comme on peut s'en douter, les tests système permettent de contrôler le système dans son ensemble.{\color{red} \textbf{TODO}}\\
+\subsection*{Integration and system tests}
+\addcontentsline{toc}{subsection}{Integration and system tests}
+Integration tests aim at validate the behaviour of two subsystems working together. For instance, a part of a program that uses a database. System tests are like master Integration tests, that validates the behaviour of the whole system, where every part communicates with others.\\
 
 %\section*{Testing by contract}
 %\addcontentsline{toc}{section}{Testing by contract}
@@ -356,6 +352,7 @@ $i$ \textbf{passes} \textit{t} $=_{def}$ $\forall \sigma \in L^* : t \| i$ \text
 \chapter*{Main ideas}
 \addcontentsline{toc}{chapter}{Main ideas}
 We want to apply a \textbf{ioco}-like theory to white-box testing.
+In this chapter, we consider systems without recursive or asynchronous functions.
 \section*{Model of the system}
 \addcontentsline{toc}{section}{Model of the system}
 
@@ -392,12 +389,12 @@ The set of decisions label is associated with a set of state $\{d0, d1, d2\}$. E
 \newline
 
 \begin{lemma}
-For a set of inputs, the system is deterministic:\\
+For a given set of inputs, the system is deterministic:\\
 $\forall i, j \in [0, n], i \neq j \Rightarrow \neg (\phi_i \wedge \phi_j)$\\
 \end{lemma}
 
 \begin{lemma}
-Every set of input lead to a computation:\\
+Every set of input leads to a computation:\\
 $\forall i \in [0, n] $\\
 \[\displaystyle \neg (\bigvee_{\substack{j=0 \\ j \neq i}}^{n} \phi_j) \Rightarrow \phi_i \]
 \end{lemma}
@@ -416,37 +413,35 @@ At first, we assume that our system is only composed of well defined functions. 
 
 A trace is accessible if we compute inputs from a specific domain. The program itself is a classification tool, and we need to test every class of inputs to ensure the correctness of the system.\\
 
+Generate a population of test objects respecting the classification condition is made by constraint programming. We use \textit{choco}, a constraint programming library described in $[4.2]$.\\
+
 \section*{Handle undefined functions}
 \addcontentsline{toc}{section}{Handle undefined functions}
 We call \textit{undefined function} a function for which we cannot access the source code. Those functions can be seen as black boxes, with no link between the inputs and the outputs.\\
 Let $I$ be a set of input given to $f$, an undefined, but surjective, function.\\
 Let $O$ be the set of output returned from $f$ for $I$.\\
-$\forall x \in I$\\
-SMT... {\color{red} \textbf{TODO}}\\
+Let $S$ be the set of states of a process $p$ containing the undefined function, and $p$, $p' \in S$ such as:\\
+$p \xrightarrow{f} p'$\\
+Let $p_0$ be the initial state and $p \xRightarrow{\sigma} p'$.
+We must run an new study on $p_{\mid p'}$ the LTS $p$ reduced to the states $p$ \textbf{after} $\sigma$.\\
+ Another method would be to replace every input in $I$ by an undefined function in the FO formulas of the decision states. Note that SMT solvers can handle undefined functions.
 
-\section*{Reducing average complexity by slicing}
-\addcontentsline{toc}{section}{Reducing average complexity by slicing}
-In some cases, the complexity can be reduced by isolating, or \textit{slicing}, parts of program that depends on a reduced set of data. For instance ...{\color{red} \textbf{TODO}}\\
+
+%\section*{Reducing average complexity by slicing}
+%\addcontentsline{toc}{section}{Reducing average complexity by slicing}
+%In some cases, the complexity can be reduced by isolating, or \textit{slicing}, parts of program that depends on a reduced set of data. For instance ...{\color{red} \textbf{TODO}}\\
 
 
-\section*{extracting test suites with our model}
+\section*{Extracting test suites with our model: example}
 \addcontentsline{toc}{section}{extracting test suites with our model}
 
-\begin{itemize}
-\item[$->$] random testing
-\item[$->$] dynamic path construction leaded by coverage (récursive)
-\item[$->$] logic modelisation (FOL) and SMT solver
-\item[$->$] equivalent computation
-\item[$->$] Bashir sliding
-\end{itemize}
+Our analysis is based on the java source code.\\
 
-Our analysis is based on the java source code. {\color{red} \textbf{TODO}}\\
-On raisonne sur le code source, et plus particulièrement sur des blocs de code. A partir de ce point, nous appellerons fonction élémentaire une partie de code dont la séquence d'exécution ne dépend d'aucune variable. Plus précisément, un code java qui ne contient pas d'accolades.\\
-\newline
-Par exemple, le code java suivant contient deux actions elementaires: val=arg1 et val+=arg2\\
+The full process on a simple function belonging to a java class Example:\\
+
 
 \begin{lstlisting}
-public int exemple(int arg1, int arg2){
+public int example(int arg1, int arg2){
 		int val = 0;
 		if(this.a<arg1){
 			val = arg1;
@@ -457,40 +452,44 @@ public int exemple(int arg1, int arg2){
 		return val;
 	}
 \end{lstlisting}
-A cette fonction, on associera le graph suivant:\\
-
+From this function, we produce the following graph:\\
 
 \begin{center}
-%\begin{figure}[h!]
-   %\caption{\label{étiquette} titre}
    \includegraphics[scale=0.3]{../graphviz/doubleStackGraph.png}
-%\end{figure}
 \end{center}
 
+For every run, we do store every condition with previous action impact taken to account.
 
+With our model, the constraint satisfier will generate data to satisfy any condition previously stored and run every possible path:
+ex:\\
+Example ex = new Example(3);\\
+ex.example(1, 2);\\
+This code will activate the trace $a_0.d_0.d_1.a_2.o_1$\\
 
-En suivant notre modélisation, on obtient deux actions élémentaires:
+And so on until every trace is activated.
 
 
 
 \chapter*{Forthcoming work}
 \addcontentsline{toc}{chapter}{Forthcoming work}
 
-In its current state, our work doesn't handle recursive or asynchronous systems.
-\section*{{\color{red} \textbf{TODO}}}
-integration level
+In its current state, our work doesn't handle recursive or asynchronous systems.\\
+\newline
+The case of undefined function will be solved by \textit{fuzzing}, or data generation using \textit{genetic algorithm}.\\
+A study should be made to determine the less time consuming technique, but such experiences will require considerable programming efforts.\\
+\newline
+Moreover, we are not yet capable of generating specification automatically. A system of data-dependency analysis is currently in development, but not up and running by now.\\
+After the specification generation, it would be interesting to focus on the adaptation of a \textit{ioco-like} theory that would consider $LTSs$ with inputs, outputs \textbf{and variables}. Reducing the current white box abstraction to a classic $ioLTS$ is a loss of information.\\
+\newline
+Eventually, it would be interesting to focus on the feasibility of an automatic recognition of \textit{input} and \textit{output} functions.\\
+For instance, our model will not be able to set up high quality \textit{integration test suites}. We must introduce \textit{write/read} notions, so that we can check push/pull functionalities between systems.\\
+\newline
 
 
-%\begin{center}
-%\begin{figure}[h!]
 
-   %\caption{\label{étiquette} Concreat exemple from our prototype}
-   \centerline{
-   \includegraphics[scale=0.3]{../graphviz/realExemple.png}
-}
-%\end{figure}
-%\end{center}
-This figure was generated from our function interpreter, using \textit{grapgviz}.
+
+
+
 \newpage
 \section*{References}
 \addcontentsline{toc}{chapter}{References}
@@ -533,16 +532,26 @@ $[3.4]$\textit{Higher-Order Test Generation} -
 Patrice Godefroid - 
 Microsoft Research\\
 \newline
-$[3.5]$\textit{Conformance testing with labelled transition systems: Implementationrelations and test generation} - 
+$[3.5]$\textit{Conformance testing with labelled transition systems: Implementation relations and test generation} - 
 Jan Tretmans - 
 Tele-Informatics and Open Systems Group, Department of Computer Science - University of Twente.\\
 \newline
 \textbf{SMT Solvers and constraint satisfaction}\\
 \addcontentsline{toc}{section}{SMT Solvers}
 \newline
-$[4.1]$ {\color{red} \textbf{TODO}}\\
+$[4.1]$ Yices - SMT solver (and smt-lib)\\
 \newline
 $[4.2]$ \textit{choco}: an Open Source Java Constraint Programming Library - Ecole des Mines de Nantes\\
 
+
+\chapter*{ANNEXE}
+
+A graph automatically generated by our prototype from a java function:
+
+
+\centerline{
+   \includegraphics[scale=0.25]{../graphviz/realExemple.png}
+}
+This figure was generated from our function interpreter, using \textit{graphviz}.
 
 \end{document}
