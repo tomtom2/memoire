@@ -380,7 +380,12 @@ The following graph represent a example function where:
 \item $F\ =\ \{phi1, phi2, phi3\}$
 \end{itemize}
 $ $\\
-\includegraphics[scale=0.3]{../graphviz/LTSExample.png}
+%\includegraphics[scale=0.3]{../graphviz/LTSExample.png}
+\begin{figure}[h!]
+  \caption{graph of a simple function}
+  \centering
+    \includegraphics[scale=0.3]{../graphviz/LTSExample.png}
+\end{figure}
 $ $\\
 \newline
 
@@ -391,6 +396,7 @@ The set of decisions label is associated with a set of state $\{d0, d1, d2\}$. E
 \begin{lemma}
 For a given set of inputs, the system is deterministic:\\
 $\forall i, j \in [0, n], i \neq j \Rightarrow \neg (\phi_i \wedge \phi_j)$\\
+(i.e. a given input set will activate a unique path at every run.)
 \end{lemma}
 
 \begin{lemma}
@@ -403,8 +409,10 @@ $\forall i \in [0, n] $\\
 
 
 \begin{remark}
-In our prototype, a decision node has two labels maximum. This is due to parsing issues of java code. Manage multiple decision node linked to each other is less complex than processing the code to obtain a single, node with multiple FO formulas.
+In our prototype, a decision node has two labels maximum. This is due to parsing issues of java code. Manage multiple decision node linked to each other is less complex than processing the code to obtain a single, node with multiple FO formulas.\\
 \end{remark}
+Anyway, every possible trace is stored and associated with its condition of application. For every function $p$, we link a domain to a trace:\\ $\forall i \in Card(traces(p))$\\
+$\phi_i \leftrightarrow trace_i$\\
 
 
 \section*{Generation of initial test data}
@@ -415,6 +423,9 @@ A trace is accessible if we compute inputs from a specific domain. The program i
 
 Generate a population of test objects respecting the classification condition is made by constraint programming. We use \textit{choco}, a constraint programming library described in $[4.2]$.\\
 
+Previously, we have seen that every trace could be linked to a \textit{first order formula} which variables can be mapped to a set of inputs. It is now possible to extract the conditions concerning an object, and set its attributes with \textit{choco}.\\
+
+
 \section*{Handle undefined functions}
 \addcontentsline{toc}{section}{Handle undefined functions}
 We call \textit{undefined function} a function for which we cannot access the source code. Those functions can be seen as black boxes, with no link between the inputs and the outputs.\\
@@ -424,7 +435,7 @@ Let $S$ be the set of states of a process $p$ containing the undefined function,
 $p \xrightarrow{f} p'$\\
 Let $p_0$ be the initial state and $p \xRightarrow{\sigma} p'$.
 We must run an new study on $p_{\mid p'}$ the LTS $p$ reduced to the states $p$ \textbf{after} $\sigma$.\\
- Another method would be to replace every input in $I$ by an undefined function in the FO formulas of the decision states. Note that SMT solvers can handle undefined functions.
+ Another method would be to replace every input in $I$ by an undefined function in the FO formulas of the decision states. Note that SMT solvers can handle undefined functions.\\
 
 
 %\section*{Reducing average complexity by slicing}
@@ -458,8 +469,9 @@ From this function, we produce the following graph:\\
    \includegraphics[scale=0.3]{../graphviz/doubleStackGraph.png}
 \end{center}
 
-For every run, we do store every condition with previous action impact taken to account.
-
+For every run, we store every condition with previous action impact taken to account.
+For instance, the run $a_0.d_0.d_1.a_2.o_1$ is linked to:\\ $\phi_1
+:= a >= arg1 \wedge arg2 > 0$ \\
 With our model, the constraint satisfier will generate data to satisfy any condition previously stored and run every possible path:
 ex:\\
 Example ex = new Example(3);\\
